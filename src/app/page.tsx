@@ -29,7 +29,18 @@ import {
   User,
   ShoppingBag,
   Award,
-  Clock
+  Clock,
+  LogIn,
+  LogOut,
+  List,
+  Grid,
+  Info,
+  ChevronRight,
+  Eye,
+  EyeOff,
+  Lock,
+  UserCheck,
+  Bell
 } from "lucide-react";
 
 // Types
@@ -46,6 +57,7 @@ interface Product {
   badgeColor?: string;
   imageText: string;
   inStock: boolean;
+  description: string;
 }
 
 interface CartItem {
@@ -53,18 +65,39 @@ interface CartItem {
   quantity: number;
 }
 
-// Mock Data
+interface UserAccount {
+  name: string;
+  phone: string;
+  role: "Ota-ona" | "O'quvchi" | "O'qituvchi";
+  isLoggedIn: boolean;
+}
+
+// Background Study Images (3-4 Premium Unsplash Photos with Blur)
+const STUDY_BACKGROUNDS = [
+  "https://images.unsplash.com/photo-1503676260728-1c00da094a0b?q=80&w=2000&auto=format&fit=crop", // School supplies & books
+  "https://images.unsplash.com/photo-1577896851231-70ef18881754?q=80&w=2000&auto=format&fit=crop", // Study table & stationery
+  "https://images.unsplash.com/photo-1497633762265-9d179a990aa6?q=80&w=2000&auto=format&fit=crop", // Library & notebooks
+  "https://images.unsplash.com/photo-1580582932707-520aed937b7b?q=80&w=2000&auto=format&fit=crop", // Backpack & pencils
+];
+
+// Expanded 20+ Mock Products for Accurate Search
 const PRODUCTS: Product[] = [
-  { id: 1, title: "Ortopedik Maktab Ryukzagi 'Pro-Ergo 2026'", price: 245000, oldPrice: 310000, category: "Maktab Sumkalari", grade: [1, 2, 3, 4], rating: 4.9, reviews: 128, badge: "-21%", badgeColor: "bg-emerald-500", imageText: "🎒 Pro Ryukzak", inStock: true },
-  { id: 2, title: "Premium 12-Varaqli Daftarlar To'plami (10 ta)", price: 18000, oldPrice: 24000, category: "Daftarlar", grade: [1, 2, 3, 4, 5, 6, 7], rating: 4.8, reviews: 340, badge: "Xit Sotuv", badgeColor: "bg-blue-600", imageText: "📓 10x Daftar", inStock: true },
-  { id: 3, title: "Maped ColorPeps 24-Rangli Qalamlar To'plami", price: 45000, oldPrice: 58000, category: "Qalamlar", grade: [1, 2, 3, 4, 5, 6, 7], rating: 5.0, reviews: 89, badge: "Yangi", badgeColor: "bg-purple-600", imageText: "✏️ 24x Qalam", inStock: true },
-  { id: 4, title: "Metall Tsirkul va Geometriya Pro To'plami", price: 35000, oldPrice: 45000, category: "Geometriya", grade: [5, 6, 7], rating: 4.7, reviews: 64, badge: "-22%", badgeColor: "bg-emerald-500", imageText: "📐 Geometriya", inStock: true },
-  { id: 5, title: "Ergonomik Sharli Ruchkalar 10 ta (Ko'k va Qora)", price: 22000, oldPrice: 28000, category: "Ruchkalar", grade: [1, 2, 3, 4, 5, 6, 7], rating: 4.9, reviews: 210, badge: "Top Sifat", badgeColor: "bg-blue-600", imageText: "🖊️ 10x Ruchka", inStock: true },
-  { id: 6, title: "Maktab Formasi Oq Ko'ylak (100% Paxta)", price: 120000, oldPrice: 150000, category: "Forma", grade: [1, 2, 3, 4, 5, 6, 7], rating: 4.8, reviews: 95, badge: "-20%", badgeColor: "bg-emerald-500", imageText: "👔 Oq Ko'ylak", inStock: true },
-  { id: 7, title: "Suv Uchun Thermo-Butilka (500ml, Zanglamas)", price: 65000, oldPrice: 85000, category: "Aksessuarlar", grade: [1, 2, 3, 4, 5, 6, 7], rating: 4.9, reviews: 156, badge: "Yangi", badgeColor: "bg-purple-600", imageText: "🍶 Termos", inStock: true },
-  { id: 8, title: "San'at va Chizmachilik Albomi (40 varaq, qalin)", price: 15000, oldPrice: 20000, category: "Daftarlar", grade: [1, 2, 3, 4, 5, 6, 7], rating: 4.7, reviews: 78, badge: "Arzon", badgeColor: "bg-amber-500", imageText: "🎨 Albom", inStock: true },
-  { id: 9, title: "Urban Pro USB Noutbuk Ryukzagi (Katta Sinf)", price: 290000, oldPrice: 380000, category: "Maktab Sumkalari", grade: [5, 6, 7], rating: 5.0, reviews: 112, badge: "-23%", badgeColor: "bg-emerald-500", imageText: "💼 Urban Bag", inStock: true },
-  { id: 10, title: "Akril Bo'yoqlar 12-Rangli To'plami (Mo'yqalam bilan)", price: 38000, oldPrice: 48000, category: "Qalamlar", grade: [2, 3, 4, 5], rating: 4.8, reviews: 84, badge: "San'at", badgeColor: "bg-pink-600", imageText: "🖌️ Bo'yoqlar", inStock: true },
+  { id: 1, title: "Ortopedik Maktab Ryukzagi 'Pro-Ergo 2026'", price: 245000, oldPrice: 310000, category: "Maktab Sumkalari", grade: [1, 2, 3, 4], rating: 4.9, reviews: 128, badge: "-21%", badgeColor: "bg-emerald-500", imageText: "🎒 Pro Ryukzak", inStock: true, description: "Belni asrovchi ortopedik suyanchiq, suv o'tkazmas mato va yorug'lik qaytaruvchi chiziqlari bor." },
+  { id: 2, title: "Premium 12-Varaqli Daftarlar To'plami (10 ta)", price: 18000, oldPrice: 24000, category: "Daftarlar", grade: [1, 2, 3, 4, 5, 6, 7], rating: 4.8, reviews: 340, badge: "Xit Sotuv", badgeColor: "bg-blue-600", imageText: "📓 10x Daftar", inStock: true, description: "Oq farfor qog'ozli, ko'zni toliqtirmaydigan chiziqli va katakli daftarlar to'plami." },
+  { id: 3, title: "Maped ColorPeps 24-Rangli Qalamlar To'plami", price: 45000, oldPrice: 58000, category: "Qalamlar", grade: [1, 2, 3, 4, 5, 6, 7], rating: 5.0, reviews: 89, badge: "Yangi", badgeColor: "bg-purple-600", imageText: "✏️ 24x Qalam", inStock: true, description: "Yumshoq yozadigan, sinishga chidamli va yorqin rangli ekologik qalamlar." },
+  { id: 4, title: "Metall Tsirkul (Sirkul) va Geometriya Pro To'plami", price: 35000, oldPrice: 45000, category: "Geometriya", grade: [5, 6, 7], rating: 4.7, reviews: 64, badge: "-22%", badgeColor: "bg-emerald-500", imageText: "📐 Geometriya", inStock: true, description: "Tsirkul, chizg'ich, transportir va o'chirg'ichdan iborat po'lat qurollar to'plami." },
+  { id: 5, title: "Ergonomik Sharli Ruchkalar 10 ta (Ko'k va Qora)", price: 22000, oldPrice: 28000, category: "Ruchkalar", grade: [1, 2, 3, 4, 5, 6, 7], rating: 4.9, reviews: 210, badge: "Top Sifat", badgeColor: "bg-blue-600", imageText: "🖊️ 10x Ruchka", inStock: true, description: "0.5mm ingichka yozadigan, siyohi oqib ketmaydigan qo'lga qulay ruchkalar." },
+  { id: 6, title: "Maktab Formasi Oq Ko'ylak (100% Paxta)", price: 120000, oldPrice: 150000, category: "Forma", grade: [1, 2, 3, 4, 5, 6, 7], rating: 4.8, reviews: 95, badge: "-20%", badgeColor: "bg-emerald-500", imageText: "👔 Oq Ko'ylak", inStock: true, description: "Terlatmaydigan tabiiy paxta matodan tutilgan rasmiy maktab ko'ylagi." },
+  { id: 7, title: "Suv Uchun Thermo-Butilka (500ml, Zanglamas)", price: 65000, oldPrice: 85000, category: "Aksessuarlar", grade: [1, 2, 3, 4, 5, 6, 7], rating: 4.9, reviews: 156, badge: "Yangi", badgeColor: "bg-purple-600", imageText: "🍶 Termos", inStock: true, description: "12 soat davomida suvni issiq yoki yaxna saqlab beruvchi po'lat termos idish." },
+  { id: 8, title: "San'at va Chizmachilik Albomi (40 varaq, qalin)", price: 15000, oldPrice: 20000, category: "Daftarlar", grade: [1, 2, 3, 4, 5, 6, 7], rating: 4.7, reviews: 78, badge: "Arzon", badgeColor: "bg-amber-500", imageText: "🎨 Albom", inStock: true, description: "Akvarel va gouash bo'yoqlari uchun o'qilmaydigan qalin qog'ozli albom." },
+  { id: 9, title: "Urban Pro USB Noutbuk Ryukzagi (Katta Sinf)", price: 290000, oldPrice: 380000, category: "Maktab Sumkalari", grade: [5, 6, 7], rating: 5.0, reviews: 112, badge: "-23%", badgeColor: "bg-emerald-500", imageText: "💼 Urban Bag", inStock: true, description: "USB zaryad portiga ega, zamonaviy dizaynli va ko'p bo'limli ryukzak." },
+  { id: 10, title: "Akril Bo'yoqlar 12-Rangli To'plami (Mo'yqalam bilan)", price: 38000, oldPrice: 48000, category: "Qalamlar", grade: [2, 3, 4, 5], rating: 4.8, reviews: 84, badge: "San'at", badgeColor: "bg-pink-600", imageText: "🖌️ Bo'yoqlar", inStock: true, description: "Yorqin qurimaydigan akril bo'yoqlar va 2 ta professional mo'yqalam." },
+  { id: 11, title: "Maktab Penali 'Smart Organizer' (3 bo'limli)", price: 45000, oldPrice: 55000, category: "Aksessuarlar", grade: [1, 2, 3, 4, 5], rating: 4.9, reviews: 140, badge: "Hit", badgeColor: "bg-blue-600", imageText: "👝 Penal", inStock: true, description: "50 ta ruchka va qalam sig'adigan, zamonaviy va chidamli maktab penali." },
+  { id: 12, title: "Umumiy 48-Varaqli Daftarlar To'plami (5 ta)", price: 25000, oldPrice: 32000, category: "Daftarlar", grade: [5, 6, 7], rating: 4.9, reviews: 190, badge: "Top", badgeColor: "bg-emerald-500", imageText: "📚 48x Daftar", inStock: true, description: "Fizika, kimyo va algebra fanlari uchun qalin muqovali sifatli daftarlar." },
+  { id: 13, title: "Avtomat Qalam o'chirish quroli va o'chirg'ichlar", price: 12000, oldPrice: 16000, category: "Qalamlar", grade: [1, 2, 3, 4, 5, 6, 7], rating: 4.8, reviews: 88, badge: "Arzon", badgeColor: "bg-amber-500", imageText: "🧽 O'chirg'ich", inStock: true, description: "Qog'ozni yirtmasdan tozalovchi yumshoq o'chirg'ichlar va qalam yo'ng'ich." },
+  { id: 14, title: "Maktab Formasi To'q Ko'k Shim va Yubka", price: 145000, oldPrice: 180000, category: "Forma", grade: [1, 2, 3, 4, 5, 6, 7], rating: 4.8, reviews: 76, badge: "-19%", badgeColor: "bg-emerald-500", imageText: "👖 Shim/Yubka", inStock: true, description: "G'ijim bo'lmaydigan, yuvishga chidamli yuqori sifatli maktab shimi va yubkasi." },
+  { id: 15, title: "Plastilin 12-Rang va Haykaltaroshlik Qurollari", price: 20000, oldPrice: 26000, category: "Qalamlar", grade: [1, 2, 3], rating: 4.7, reviews: 92, badge: "Boshlang'ich", badgeColor: "bg-purple-600", imageText: "🎨 Plastilin", inStock: true, description: "Qo'lga yopishmaydigan, xavfsiz va yorqin bolalar plastilini to'plami." },
+  { id: 16, title: "Eko Lanch-boks (Ovqat idishi + Qoshiq-vilka)", price: 55000, oldPrice: 70000, category: "Aksessuarlar", grade: [1, 2, 3, 4, 5, 6, 7], rating: 5.0, reviews: 205, badge: "Eko", badgeColor: "bg-teal-600", imageText: "🍱 Lanchboks", inStock: true, description: "Bolalar tushlik ovqati uchun issiq saqlovchi bo'limli oziq-ovqat idishi." },
 ];
 
 const GRADE_PACKAGES: Record<number, { title: string; price: number; oldPrice: number; items: string[]; bg: string }> = {
@@ -81,9 +114,26 @@ const CATEGORIES = ["Barchasi", "Maktab Sumkalari", "Daftarlar", "Qalamlar", "Ru
 
 export default function MaktabStartApp() {
   // Navigation & Tabs state
-  const [activeTab, setActiveTab] = useState<"home" | "catalog" | "checklist" | "calculator">("home");
+  const [activeTab, setActiveTab] = useState<"home" | "catalog" | "checklist" | "calculator" | "account">("home");
   const [selectedGrade, setSelectedGrade] = useState<number>(5);
+  const [bgIndex, setBgIndex] = useState(0);
   
+  // User Authentication State
+  const [user, setUser] = useState<UserAccount>({
+    name: "Jasur Karimov",
+    phone: "+998 90 123 45 67",
+    role: "Ota-ona",
+    isLoggedIn: false,
+  });
+  const [isLoginModalOpen, setIsLoginModalOpen] = useState(false);
+  const [loginPhone, setLoginPhone] = useState("+998 ");
+  const [loginPass, setLoginPass] = useState("");
+  const [loginRole, setLoginRole] = useState<"Ota-ona" | "O'quvchi" | "O'qituvchi">("Ota-ona");
+  const [showPassword, setShowPassword] = useState(false);
+
+  // Purpose Intro Modal State
+  const [showPurposeModal, setShowPurposeModal] = useState(true);
+
   // Cart & Wishlist state
   const [cart, setCart] = useState<CartItem[]>([
     { product: PRODUCTS[0], quantity: 1 },
@@ -91,14 +141,14 @@ export default function MaktabStartApp() {
   ]);
   const [wishlist, setWishlist] = useState<number[]>([1, 3]);
   const [isCartOpen, setIsCartOpen] = useState(false);
-  const [isSearchOpen, setIsSearchOpen] = useState(false);
-  const [searchQuery, setSearchQuery] = useState("");
   const [toast, setToast] = useState<string | null>(null);
 
-  // Catalog Filter State
+  // Search & Catalog Filter State
+  const [searchQuery, setSearchQuery] = useState("");
   const [selectedCategory, setSelectedCategory] = useState("Barchasi");
   const [selectedGradeFilter, setSelectedGradeFilter] = useState<number | null>(null);
   const [sortBy, setSortBy] = useState<"popular" | "price-asc" | "price-desc">("popular");
+  const [viewMode, setViewMode] = useState<"grid" | "list">("list"); // Default Row-by-Row as requested!
 
   // Checklist State
   const [checklist, setChecklist] = useState([
@@ -113,13 +163,20 @@ export default function MaktabStartApp() {
 
   // Budget Calculator State
   const [userBudget, setUserBudget] = useState<number>(300000);
-  const [calcGrade, setCalcGrade] = useState<number>(5);
 
   // Checkout State
   const [isCheckoutOpen, setIsCheckoutOpen] = useState(false);
   const [isSuccessOpen, setIsSuccessOpen] = useState(false);
   const [couponCode, setCouponCode] = useState("");
   const [discountPercent, setDiscountPercent] = useState(0);
+
+  // Rotate background images every 8 seconds
+  useEffect(() => {
+    const timer = setInterval(() => {
+      setBgIndex((prev) => (prev + 1) % STUDY_BACKGROUNDS.length);
+    }, 8000);
+    return () => clearInterval(timer);
+  }, []);
 
   // Computed Cart Values
   const cartTotalItems = cart.reduce((sum, item) => sum + item.quantity, 0);
@@ -177,29 +234,47 @@ export default function MaktabStartApp() {
     }
   };
 
-  // Keyboard shortcut Ctrl+K
-  useEffect(() => {
-    const handleKeyDown = (e: KeyboardEvent) => {
-      if ((e.ctrlKey || e.metaKey) && e.key === "k") {
-        e.preventDefault();
-        setIsSearchOpen((prev) => !prev);
-      }
-    };
-    window.addEventListener("keydown", handleKeyDown);
-    return () => window.removeEventListener("keydown", handleKeyDown);
-  }, []);
+  const handleLogin = (e: React.FormEvent) => {
+    e.preventDefault();
+    setUser({
+      name: loginPhone.length > 6 ? `Foydalanuvchi (${loginPhone.slice(-4)})` : "Jasur Karimov",
+      phone: loginPhone,
+      role: loginRole,
+      isLoggedIn: true,
+    });
+    setIsLoginModalOpen(false);
+    showToast(`🎉 Xush kelibsiz, ${loginRole}! Kabinetga muvaffaqiyatli kirdingiz.`);
+  };
 
-  // Filtered Products for Catalog
+  const handleLogout = () => {
+    setUser((prev) => ({ ...prev, isLoggedIn: false }));
+    showToast("👋 Tizimdan chiqdingiz!");
+  };
+
+  // Filtered Products for Catalog & Instant Live Search
   const filteredProducts = PRODUCTS.filter((p) => {
     const matchesCat = selectedCategory === "Barchasi" || p.category === selectedCategory;
     const matchesGrade = selectedGradeFilter === null || p.grade.includes(selectedGradeFilter);
-    const matchesSearch = p.title.toLowerCase().includes(searchQuery.toLowerCase()) || p.category.toLowerCase().includes(searchQuery.toLowerCase());
+    const matchesSearch =
+      searchQuery.trim() === "" ||
+      p.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      p.category.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      p.description.toLowerCase().includes(searchQuery.toLowerCase());
     return matchesCat && matchesGrade && matchesSearch;
   }).sort((a, b) => {
     if (sortBy === "price-asc") return a.price - b.price;
     if (sortBy === "price-desc") return b.price - a.price;
     return b.rating - a.rating;
   });
+
+  // Automatically switch to Catalog tab if user types in search
+  const handleSearchInput = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const val = e.target.value;
+    setSearchQuery(val);
+    if (val.trim() !== "" && activeTab !== "catalog") {
+      setActiveTab("catalog");
+    }
+  };
 
   // Checklist computation
   const completedChecklist = checklist.filter((i) => i.checked).length;
@@ -208,6 +283,21 @@ export default function MaktabStartApp() {
   return (
     <div className="min-h-screen flex flex-col bg-slate-50 selection:bg-blue-600 selection:text-white relative font-sans">
       
+      {/* 4 HIGH-QUALITY STUDY BACKGROUNDS WITH BLUR OVERLAY */}
+      <div className="fixed inset-0 pointer-events-none z-0 overflow-hidden">
+        {STUDY_BACKGROUNDS.map((bgUrl, idx) => (
+          <div
+            key={idx}
+            className={`absolute inset-0 bg-cover bg-center transition-opacity duration-1000 transform scale-105 ${
+              bgIndex === idx ? "opacity-30" : "opacity-0"
+            }`}
+            style={{ backgroundImage: `url('${bgUrl}')` }}
+          />
+        ))}
+        {/* Sleek Light Glass/Mesh Overlay for Apple-grade text legibility */}
+        <div className="absolute inset-0 bg-gradient-to-b from-white/90 via-slate-50/95 to-white/95 backdrop-blur-[6px]" />
+      </div>
+
       {/* TOAST NOTIFICATION */}
       {toast && (
         <div className="fixed bottom-6 right-6 z-50 bg-slate-900 text-white px-6 py-4 rounded-2xl shadow-2xl flex items-center gap-3 border border-slate-700 animate-fade-in">
@@ -215,61 +305,167 @@ export default function MaktabStartApp() {
         </div>
       )}
 
-      {/* INSTANT SEARCH MODAL (Ctrl + K) */}
-      {isSearchOpen && (
-        <div className="fixed inset-0 z-50 bg-slate-900/60 backdrop-blur-sm flex items-start justify-center pt-20 px-4 animate-fade-in">
-          <div className="bg-white rounded-3xl w-full max-w-2xl shadow-2xl border border-slate-200 overflow-hidden">
-            <div className="p-4 border-b border-slate-100 flex items-center gap-3">
-              <Search className="w-5 h-5 text-blue-600 shrink-0" />
-              <input
-                type="text"
-                placeholder="Ruchka, daftar, ryukzak yoki 5-sinf deb qidiring..."
-                value={searchQuery}
-                onChange={(e) => setSearchQuery(e.target.value)}
-                autoFocus
-                className="w-full text-base text-slate-800 outline-none placeholder:text-slate-400 font-medium"
-              />
-              <button
-                onClick={() => setIsSearchOpen(false)}
-                className="p-1 rounded-lg hover:bg-slate-100 text-slate-400 hover:text-slate-600"
-              >
-                <X className="w-5 h-5" />
+      {/* ONBOARDING & PURPOSE EXPLANATION MODAL (EXPLAINING WHY USERS SHOULD ENTER) */}
+      {showPurposeModal && (
+        <div className="fixed inset-0 z-50 bg-slate-900/70 backdrop-blur-md flex items-center justify-center p-4 animate-fade-in">
+          <div className="bg-white rounded-3xl max-w-xl w-full p-6 sm:p-8 shadow-2xl border border-slate-200 space-y-6 relative overflow-hidden">
+            <div className="absolute top-0 right-0 w-32 h-32 bg-blue-500/10 rounded-full blur-2xl pointer-events-none" />
+            
+            <div className="flex items-center justify-between border-b pb-4">
+              <div className="flex items-center gap-3">
+                <div className="w-12 h-12 rounded-2xl bg-gradient-to-br from-blue-600 to-indigo-600 flex items-center justify-center text-white shadow-lg shadow-blue-500/25">
+                  <GraduationCap className="w-7 h-7" />
+                </div>
+                <div>
+                  <h3 className="font-extrabold text-xl text-slate-900">MaktabStart'ga Xush Kelibsiz!</h3>
+                  <span className="text-xs font-bold text-blue-600 uppercase tracking-wider">Platforma Maqsadi va Afzalligi</span>
+                </div>
+              </div>
+              <button onClick={() => setShowPurposeModal(false)} className="text-slate-400 hover:text-slate-600 p-1">
+                <X className="w-6 h-6" />
               </button>
             </div>
-            
-            <div className="max-h-96 overflow-y-auto p-4 space-y-3">
-              {filteredProducts.length === 0 ? (
-                <div className="text-center py-8 text-slate-400 font-medium">Hech narsa topilmadi...</div>
-              ) : (
-                filteredProducts.map((p) => (
-                  <div
-                    key={p.id}
-                    onClick={() => {
-                      addToCart(p, 1);
-                      setIsSearchOpen(false);
-                    }}
-                    className="p-3 rounded-2xl hover:bg-slate-50 border border-transparent hover:border-slate-200 flex items-center justify-between cursor-pointer transition-all"
-                  >
-                    <div className="flex items-center gap-3">
-                      <div className="w-12 h-12 rounded-xl bg-slate-100 flex items-center justify-center text-2xl">
-                        {p.imageText.split(" ")[0]}
-                      </div>
-                      <div>
-                        <h4 className="font-semibold text-slate-900 text-sm">{p.title}</h4>
-                        <span className="text-xs text-blue-600 font-medium">{p.category} • {p.price.toLocaleString()} so'm</span>
-                      </div>
-                    </div>
-                    <button className="px-3 py-1.5 rounded-xl bg-blue-50 text-blue-600 font-bold text-xs hover:bg-blue-600 hover:text-white transition-colors">
-                      + Savatga
-                    </button>
+
+            <div className="space-y-4 text-slate-600 text-sm sm:text-base leading-relaxed font-medium">
+              <p className="font-bold text-slate-900">
+                🎯 Nima maqsadda bu saytga kirdingiz va biz sizga qanday yordam beramiz?
+              </p>
+              <p>
+                Maktab bozorlarida soatlab vaqt yo'qotish, og'ir sumkalarni ko'tarish va har bir fan uchun qanday daftar-qurol kerakligini o'ylash davri o'tdi!
+              </p>
+              
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 pt-2">
+                <div className="p-3.5 rounded-2xl bg-blue-50/80 border border-blue-100 flex gap-3 items-start">
+                  <span className="text-xl">👩‍🏫</span>
+                  <div>
+                    <h4 className="font-bold text-slate-900 text-xs sm:text-sm">O'qituvchilar Ro'yxati</h4>
+                    <p className="text-xs text-slate-500 mt-0.5">1-7 sinf uchun aniq va tekshirilgan to'plamlar</p>
                   </div>
-                ))
-              )}
+                </div>
+                <div className="p-3.5 rounded-2xl bg-emerald-50/80 border border-emerald-100 flex gap-3 items-start">
+                  <span className="text-xl">⚡</span>
+                  <div>
+                    <h4 className="font-bold text-slate-900 text-xs sm:text-sm">5 Daqiqada Xarid</h4>
+                    <p className="text-xs text-slate-500 mt-0.5">Bitta klik bilan barchasini savatga solib buyurtma berish</p>
+                  </div>
+                </div>
+                <div className="p-3.5 rounded-2xl bg-purple-50/80 border border-purple-100 flex gap-3 items-start">
+                  <span className="text-xl">💰</span>
+                  <div>
+                    <h4 className="font-bold text-slate-900 text-xs sm:text-sm">50%-gacha Tejamkorlik</h4>
+                    <p className="text-xs text-slate-500 mt-0.5">Bozordan arzon ulgurji narxlar va chegirma kuponi</p>
+                  </div>
+                </div>
+                <div className="p-3.5 rounded-2xl bg-amber-50/80 border border-amber-100 flex gap-3 items-start">
+                  <span className="text-xl">🚚</span>
+                  <div>
+                    <h4 className="font-bold text-slate-900 text-xs sm:text-sm">Uyga Yetkazib Berish</h4>
+                    <p className="text-xs text-slate-500 mt-0.5">24 soat ichida eshigingizgacha kuryer yetkazadi</p>
+                  </div>
+                </div>
+              </div>
             </div>
-            <div className="bg-slate-50 px-4 py-3 border-t border-slate-100 flex justify-between items-center text-xs text-slate-500 font-medium">
-              <span>Natijalar: {filteredProducts.length} ta</span>
-              <span>Yopish uchun <kbd className="px-1.5 py-0.5 bg-white border rounded">ESC</kbd></span>
+
+            <div className="bg-slate-50 p-4 rounded-2xl border flex flex-col sm:flex-row items-center justify-between gap-3">
+              <span className="text-xs font-bold text-slate-500">
+                💡 Tizimdan to'liq foydalanish va buyurtma kuzatish uchun akkauntingizga kiring!
+              </span>
+              <button
+                onClick={() => {
+                  setShowPurposeModal(false);
+                  if (!user.isLoggedIn) setIsLoginModalOpen(true);
+                }}
+                className="w-full sm:w-auto px-6 py-3 rounded-xl bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 text-white font-extrabold text-sm shadow-md transition-all shrink-0 cursor-pointer"
+              >
+                Tushunarli, Boshladik! 🚀
+              </button>
             </div>
+          </div>
+        </div>
+      )}
+
+      {/* LOGIN / ACCOUNT AUTHENTICATION MODAL */}
+      {isLoginModalOpen && (
+        <div className="fixed inset-0 z-50 bg-slate-900/70 backdrop-blur-md flex items-center justify-center p-4 animate-fade-in">
+          <div className="bg-white rounded-3xl max-w-md w-full p-6 sm:p-8 shadow-2xl border border-slate-200 space-y-6">
+            <div className="flex items-center justify-between border-b pb-4">
+              <div className="flex items-center gap-2.5">
+                <div className="w-10 h-10 rounded-xl bg-blue-50 text-blue-600 flex items-center justify-center">
+                  <LogIn className="w-5 h-5" />
+                </div>
+                <h3 className="font-bold text-xl text-slate-900">Kabinetga Kirish / Ro'yxatdan O'tish</h3>
+              </div>
+              <button onClick={() => setIsLoginModalOpen(false)} className="text-slate-400 hover:text-slate-600 p-1">
+                <X className="w-6 h-6" />
+              </button>
+            </div>
+
+            <form onSubmit={handleLogin} className="space-y-4">
+              <div>
+                <label className="text-xs font-bold text-slate-600 uppercase block mb-1">Sizning Rolingiz</label>
+                <div className="grid grid-cols-3 gap-2">
+                  {(["Ota-ona", "O'quvchi", "O'qituvchi"] as const).map((r) => (
+                    <button
+                      key={r}
+                      type="button"
+                      onClick={() => setLoginRole(r)}
+                      className={`py-2.5 px-2 rounded-xl border font-bold text-xs transition-all ${
+                        loginRole === r
+                          ? "bg-blue-600 text-white border-blue-600 shadow-sm"
+                          : "bg-slate-50 border-slate-200 text-slate-700 hover:bg-slate-100"
+                      }`}
+                    >
+                      {r === "Ota-ona" ? "👨‍👩‍👦" : r === "O'quvchi" ? "🎒" : "👩‍🏫"} {r}
+                    </button>
+                  ))}
+                </div>
+              </div>
+
+              <div>
+                <label className="text-xs font-bold text-slate-600 uppercase block mb-1">Telefon Raqam yoki Login</label>
+                <div className="relative">
+                  <input
+                    type="text"
+                    required
+                    value={loginPhone}
+                    onChange={(e) => setLoginPhone(e.target.value)}
+                    placeholder="+998 (90) 123-45-67"
+                    className="w-full bg-slate-50 border border-slate-200 rounded-xl pl-10 pr-4 py-3 text-sm font-semibold outline-none focus:border-blue-500"
+                  />
+                  <Phone className="w-4 h-4 text-slate-400 absolute left-3.5 top-3.5" />
+                </div>
+              </div>
+
+              <div>
+                <label className="text-xs font-bold text-slate-600 uppercase block mb-1">Parol (Yoki yangi parol o'ylab toping)</label>
+                <div className="relative">
+                  <input
+                    type={showPassword ? "text" : "password"}
+                    required
+                    value={loginPass}
+                    onChange={(e) => setLoginPass(e.target.value)}
+                    placeholder="••••••••"
+                    className="w-full bg-slate-50 border border-slate-200 rounded-xl pl-10 pr-10 py-3 text-sm font-semibold outline-none focus:border-blue-500"
+                  />
+                  <Lock className="w-4 h-4 text-slate-400 absolute left-3.5 top-3.5" />
+                  <button
+                    type="button"
+                    onClick={() => setShowPassword(!showPassword)}
+                    className="absolute right-3.5 top-3.5 text-slate-400 hover:text-slate-600"
+                  >
+                    {showPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
+                  </button>
+                </div>
+                <span className="text-[11px] text-slate-400 font-medium mt-1 block">Xavfsiz: Parolingiz shifrlangan holda saqlanadi.</span>
+              </div>
+
+              <button
+                type="submit"
+                className="w-full py-4 rounded-2xl bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 text-white font-extrabold text-base shadow-xl shadow-blue-500/25 transition-all cursor-pointer mt-2"
+              >
+                Kirish / Akkaunt Yaratish
+              </button>
+            </form>
           </div>
         </div>
       )}
@@ -417,7 +613,7 @@ export default function MaktabStartApp() {
               <div>
                 <label className="text-xs font-bold text-slate-600 uppercase block mb-1">Ismingiz</label>
                 <div className="relative">
-                  <input type="text" placeholder="Jasur Karimov" defaultValue="Ota-ona / O'quvchi" className="w-full bg-slate-50 border border-slate-200 rounded-xl pl-10 pr-4 py-3 text-sm font-semibold outline-none focus:border-blue-500" />
+                  <input type="text" placeholder="Jasur Karimov" defaultValue={user.isLoggedIn ? user.name : "Ota-ona / O'quvchi"} className="w-full bg-slate-50 border border-slate-200 rounded-xl pl-10 pr-4 py-3 text-sm font-semibold outline-none focus:border-blue-500" />
                   <User className="w-4 h-4 text-slate-400 absolute left-3.5 top-3.5" />
                 </div>
               </div>
@@ -425,7 +621,7 @@ export default function MaktabStartApp() {
               <div>
                 <label className="text-xs font-bold text-slate-600 uppercase block mb-1">Telefon Raqam</label>
                 <div className="relative">
-                  <input type="text" placeholder="+998 (90) 123-45-67" defaultValue="+998 " className="w-full bg-slate-50 border border-slate-200 rounded-xl pl-10 pr-4 py-3 text-sm font-semibold outline-none focus:border-blue-500" />
+                  <input type="text" placeholder="+998 (90) 123-45-67" defaultValue={user.isLoggedIn ? user.phone : "+998 "} className="w-full bg-slate-50 border border-slate-200 rounded-xl pl-10 pr-4 py-3 text-sm font-semibold outline-none focus:border-blue-500" />
                   <Phone className="w-4 h-4 text-slate-400 absolute left-3.5 top-3.5" />
                 </div>
               </div>
@@ -500,11 +696,11 @@ export default function MaktabStartApp() {
         </div>
       )}
 
-      {/* STICKY GLASS NAVBAR */}
-      <header className="sticky top-0 z-40 glass-nav transition-all">
+      {/* STICKY GLASS NAVBAR WITH LIVE INSTANT SEARCH & USER ACCOUNT */}
+      <header className="sticky top-0 z-40 glass-nav transition-all border-b border-slate-200/80">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-20 flex items-center justify-between gap-4">
           {/* Brand Logo */}
-          <div onClick={() => setActiveTab("home")} className="flex items-center gap-3 cursor-pointer group">
+          <div onClick={() => { setActiveTab("home"); setSearchQuery(""); }} className="flex items-center gap-3 cursor-pointer group shrink-0">
             <div className="w-11 h-11 rounded-2xl bg-gradient-to-br from-blue-600 to-indigo-600 flex items-center justify-center text-white shadow-lg shadow-blue-500/25 group-hover:scale-105 transition-transform">
               <GraduationCap className="w-6 h-6 animate-pulse" />
             </div>
@@ -518,18 +714,40 @@ export default function MaktabStartApp() {
             </div>
           </div>
 
+          {/* LIVE INSTANT SEARCH INPUT (AUTO-FILTERS ACCURATELY IN REAL TIME) */}
+          <div className="flex-1 max-w-md hidden sm:block relative">
+            <div className="relative flex items-center">
+              <Search className="w-4 h-4 text-blue-600 absolute left-3.5" />
+              <input
+                type="text"
+                value={searchQuery}
+                onChange={handleSearchInput}
+                placeholder="Ruchka, daftar, ryukzak, 1-sinf deb yozing..."
+                className="w-full bg-slate-100/90 hover:bg-slate-100 focus:bg-white border border-transparent focus:border-blue-500 rounded-2xl pl-10 pr-10 py-2.5 text-xs sm:text-sm text-slate-800 outline-none font-medium transition-all shadow-inner"
+              />
+              {searchQuery && (
+                <button onClick={() => setSearchQuery("")} className="absolute right-3 text-slate-400 hover:text-slate-600">
+                  <X className="w-4 h-4" />
+                </button>
+              )}
+            </div>
+          </div>
+
           {/* Nav Tabs (Desktop) */}
-          <div className="hidden md:flex items-center gap-1 bg-slate-100/80 p-1.5 rounded-2xl border border-slate-200/60 font-semibold text-sm">
+          <div className="hidden lg:flex items-center gap-1 bg-slate-100/80 p-1 rounded-2xl border border-slate-200/60 font-semibold text-xs">
             {[
-              { id: "home", label: "🏠 Asosiy & Grade Assistant" },
-              { id: "catalog", label: "🛍️ Katalog & Filtr" },
+              { id: "home", label: "🏠 Asosiy" },
+              { id: "catalog", label: "🛍️ Katalog & Qidiruv" },
               { id: "checklist", label: "📝 Checklist" },
-              { id: "calculator", label: "🧮 Byudjet Kalkulyatori" },
+              { id: "calculator", label: "🧮 Kalkulyator" },
             ].map((tab) => (
               <button
                 key={tab.id}
-                onClick={() => setActiveTab(tab.id as any)}
-                className={`px-4 py-2 rounded-xl transition-all ${
+                onClick={() => {
+                  setActiveTab(tab.id as any);
+                  if (tab.id === "home") setSearchQuery("");
+                }}
+                className={`px-3.5 py-2 rounded-xl transition-all cursor-pointer ${
                   activeTab === tab.id
                     ? "bg-white text-blue-600 shadow-sm font-bold"
                     : "text-slate-600 hover:text-slate-900 hover:bg-white/50"
@@ -540,21 +758,45 @@ export default function MaktabStartApp() {
             ))}
           </div>
 
-          {/* Actions */}
-          <div className="flex items-center gap-3">
+          {/* User Account & Actions */}
+          <div className="flex items-center gap-2.5 shrink-0">
+            {/* Purpose Help Button */}
             <button
-              onClick={() => setIsSearchOpen(true)}
-              className="w-10 h-10 rounded-xl bg-slate-100 hover:bg-slate-200/80 text-slate-700 flex items-center justify-center transition-colors relative"
-              title="Qidiruv (Ctrl+K)"
+              onClick={() => setShowPurposeModal(true)}
+              className="w-9 h-9 rounded-xl bg-blue-50 hover:bg-blue-100 text-blue-600 flex items-center justify-center transition-colors font-bold text-xs"
+              title="Sayt maqsadi"
             >
-              <Search className="w-5 h-5" />
+              <Info className="w-4 h-4" />
             </button>
+
+            {/* Login / User Account Pill */}
+            {user.isLoggedIn ? (
+              <button
+                onClick={() => setActiveTab("account")}
+                className={`px-3 py-1.5 rounded-xl border flex items-center gap-2 text-xs font-bold transition-all cursor-pointer ${
+                  activeTab === "account" ? "bg-blue-600 text-white border-blue-600 shadow-sm" : "bg-white border-slate-200 text-slate-800 hover:bg-slate-50"
+                }`}
+              >
+                <div className="w-6 h-6 rounded-lg bg-emerald-500 text-white flex items-center justify-center text-[10px]">
+                  ✓
+                </div>
+                <span className="max-w-[80px] truncate">{user.name}</span>
+              </button>
+            ) : (
+              <button
+                onClick={() => setIsLoginModalOpen(true)}
+                className="px-3.5 py-2 rounded-xl bg-slate-900 hover:bg-slate-800 text-white text-xs font-bold flex items-center gap-1.5 shadow-sm transition-all cursor-pointer"
+              >
+                <LogIn className="w-3.5 h-3.5" />
+                <span className="hidden sm:inline">Kirish</span>
+              </button>
+            )}
 
             <button
               onClick={() => showToast(`❤️ Sizda ${wishlist.length} ta sevimli mahsulot bor`)}
-              className="relative w-10 h-10 rounded-xl bg-slate-100 hover:bg-slate-200/80 text-slate-700 flex items-center justify-center transition-colors"
+              className="relative w-9 h-9 rounded-xl bg-slate-100 hover:bg-slate-200/80 text-slate-700 flex items-center justify-center transition-colors"
             >
-              <Heart className="w-5 h-5 text-rose-500 fill-rose-500/20" />
+              <Heart className="w-4 h-4 text-rose-500 fill-rose-500/20" />
               {wishlist.length > 0 && (
                 <span className="absolute -top-1 -right-1 w-4 h-4 bg-rose-500 text-white rounded-full text-[10px] font-bold flex items-center justify-center">
                   {wishlist.length}
@@ -564,84 +806,135 @@ export default function MaktabStartApp() {
 
             <button
               onClick={() => setIsCartOpen(true)}
-              className="px-4 py-2.5 rounded-xl bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 text-white font-bold text-sm flex items-center gap-2.5 shadow-lg shadow-blue-500/25 transition-all active:scale-95"
+              className="px-3.5 py-2 rounded-xl bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 text-white font-bold text-xs sm:text-sm flex items-center gap-2 shadow-lg shadow-blue-500/25 transition-all active:scale-95 cursor-pointer"
             >
               <ShoppingCart className="w-4 h-4" />
               <span className="hidden sm:inline">Savat</span>
-              <span className="bg-white text-blue-600 font-extrabold text-xs px-2 py-0.5 rounded-full">
+              <span className="bg-white text-blue-600 font-extrabold text-[11px] px-1.5 py-0.5 rounded-full">
                 {cartTotalItems}
               </span>
             </button>
           </div>
         </div>
 
+        {/* Mobile Live Search Input */}
+        <div className="sm:hidden px-4 pb-3">
+          <div className="relative flex items-center">
+            <Search className="w-4 h-4 text-blue-600 absolute left-3.5" />
+            <input
+              type="text"
+              value={searchQuery}
+              onChange={handleSearchInput}
+              placeholder="Ruchka, daftar, ryukzak, 1-sinf deb yozing..."
+              className="w-full bg-slate-100 border border-slate-200 rounded-xl pl-10 pr-10 py-2 text-xs text-slate-800 outline-none font-medium"
+            />
+            {searchQuery && (
+              <button onClick={() => setSearchQuery("")} className="absolute right-3 text-slate-400">
+                <X className="w-4 h-4" />
+              </button>
+            )}
+          </div>
+        </div>
+
         {/* Mobile Nav Tabs */}
-        <div className="md:hidden border-t border-slate-200 bg-white px-4 py-2 flex items-center justify-around overflow-x-auto text-xs font-bold text-slate-700 gap-2">
-          <button onClick={() => setActiveTab("home")} className={`px-3 py-1.5 rounded-lg ${activeTab === "home" ? "bg-blue-600 text-white" : "bg-slate-100"}`}>🏠 Asosiy</button>
-          <button onClick={() => setActiveTab("catalog")} className={`px-3 py-1.5 rounded-lg ${activeTab === "catalog" ? "bg-blue-600 text-white" : "bg-slate-100"}`}>🛍️ Katalog</button>
-          <button onClick={() => setActiveTab("checklist")} className={`px-3 py-1.5 rounded-lg ${activeTab === "checklist" ? "bg-blue-600 text-white" : "bg-slate-100"}`}>📝 Checklist</button>
-          <button onClick={() => setActiveTab("calculator")} className={`px-3 py-1.5 rounded-lg ${activeTab === "calculator" ? "bg-blue-600 text-white" : "bg-slate-100"}`}>🧮 Kalkulyator</button>
+        <div className="lg:hidden border-t border-slate-200 bg-white/95 px-4 py-2 flex items-center justify-around overflow-x-auto text-xs font-bold text-slate-700 gap-1.5">
+          <button onClick={() => { setActiveTab("home"); setSearchQuery(""); }} className={`px-2.5 py-1.5 rounded-lg ${activeTab === "home" ? "bg-blue-600 text-white" : "bg-slate-100"}`}>🏠 Asosiy</button>
+          <button onClick={() => setActiveTab("catalog")} className={`px-2.5 py-1.5 rounded-lg ${activeTab === "catalog" ? "bg-blue-600 text-white" : "bg-slate-100"}`}>🛍️ Katalog</button>
+          <button onClick={() => setActiveTab("checklist")} className={`px-2.5 py-1.5 rounded-lg ${activeTab === "checklist" ? "bg-blue-600 text-white" : "bg-slate-100"}`}>📝 Checklist</button>
+          <button onClick={() => setActiveTab("calculator")} className={`px-2.5 py-1.5 rounded-lg ${activeTab === "calculator" ? "bg-blue-600 text-white" : "bg-slate-100"}`}>🧮 Kalkulyator</button>
         </div>
       </header>
 
       {/* MAIN VIEW CONTENTS */}
-      <main className="flex-1">
+      <main className="flex-1 relative z-10">
         
         {/* ========================================================================= */}
-        {/* TAB 1: HOME & GRADE ASSISTANT */}
+        {/* TAB 1: HOME & GRADE ASSISTANT (WITH NEW CUSTOM USER HERO) */}
         {/* ========================================================================= */}
         {activeTab === "home" && (
           <div className="animate-fade-in">
-            {/* HERO SECTION */}
-            <section className="relative overflow-hidden pt-12 pb-20 md:pt-20 md:pb-32 bg-gradient-to-b from-white via-slate-50 to-white">
-              <div className="absolute top-1/4 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[350px] bg-mesh-1 rounded-full blur-3xl pointer-events-none" />
-              <div className="absolute top-1/3 right-10 w-[400px] h-[300px] bg-mesh-2 rounded-full blur-3xl pointer-events-none" />
+            {/* NEW UPGRADED HERO SECTION WITH CUSTOM STUDENT AVATAR / DESIGN */}
+            <section className="relative overflow-hidden pt-10 pb-20 md:pt-16 md:pb-28">
+              <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+                
+                {/* User Greeting & Purpose Intro Banner */}
+                <div className="bg-gradient-to-r from-blue-900 via-indigo-900 to-slate-900 text-white rounded-3xl p-6 sm:p-8 shadow-2xl mb-12 border border-blue-500/30 flex flex-col md:flex-row items-center justify-between gap-6 relative overflow-hidden">
+                  <div className="absolute top-0 right-0 w-64 h-64 bg-blue-500/20 rounded-full blur-3xl pointer-events-none" />
+                  
+                  <div className="space-y-3 max-w-2xl">
+                    <div className="inline-flex items-center gap-2 bg-blue-500/30 text-blue-300 border border-blue-400/30 px-3 py-1 rounded-full text-xs font-bold uppercase tracking-wider">
+                      <span>✨ O'zbekistonda #1 Maktab Buyumlari Bozori</span>
+                    </div>
+                    <h1 className="text-2xl sm:text-4xl font-extrabold tracking-tight leading-tight">
+                      {user.isLoggedIn ? `Assalomu alaykum, ${user.name}!` : "Assalomu alaykum, Hurmatli Ota-ona va O'quvchilar!"}
+                    </h1>
+                    <p className="text-slate-300 text-sm sm:text-base font-medium leading-relaxed">
+                      MaktabStart'ga xush kelibsiz! Bizning maqsadimiz — farzandingizni 1–7 sinfgacha tayyorlashda bozorlarda soatlab sarson bo'lishingizning oldini olish. O'qituvchilar tomonidan tasdiqlangan eng sifatli daftarlar, qalamlar va ryukzaklarni 1 klik bilan arzon narxda uyga buyurtma bering!
+                    </p>
+                  </div>
 
-              <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center relative z-10">
-                <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-blue-50 border border-blue-100 text-blue-700 text-xs sm:text-sm font-bold mb-6 shadow-sm">
-                  <Sparkles className="w-4 h-4 text-blue-600 animate-spin" style={{ animationDuration: "3s" }} />
-                  <span>O'zbekistonda #1 Smart Maktab Bozori • 2026 Yangi Mavsum</span>
+                  {/* Hero Student Custom Visual Avatar Card */}
+                  <div className="bg-white/10 backdrop-blur-md border border-white/20 p-5 rounded-2xl text-center shrink-0 w-full md:w-64 space-y-3 shadow-lg">
+                    <div className="w-16 h-16 rounded-2xl bg-gradient-to-tr from-amber-400 via-orange-500 to-rose-500 text-white flex items-center justify-center text-3xl mx-auto shadow-md">
+                      👨‍🎓
+                    </div>
+                    <div>
+                      <h4 className="font-bold text-white text-sm">2026 Yangi O'quv Mavsumi</h4>
+                      <span className="text-xs text-blue-200 block font-medium">Sifatli va Ortopedik qurollar</span>
+                    </div>
+                    <button
+                      onClick={() => {
+                        const el = document.getElementById("grade-assistant-section");
+                        el?.scrollIntoView({ behavior: "smooth" });
+                      }}
+                      className="w-full py-2.5 rounded-xl bg-white text-slate-900 font-extrabold text-xs hover:bg-blue-50 transition-colors shadow"
+                    >
+                      Sinfni Tanlash 🎯
+                    </button>
+                  </div>
                 </div>
 
-                <h1 className="text-4xl sm:text-6xl lg:text-7xl font-extrabold tracking-tight text-slate-900 max-w-4xl mx-auto leading-[1.15]">
-                  Sinfingizni tanlang va maktabga{" "}
-                  <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-600 via-indigo-600 to-emerald-600">
-                    5 daqiqada
-                  </span>{" "}
-                  tayyor bo'ling!
-                </h1>
+                <div className="text-center max-w-4xl mx-auto space-y-6">
+                  <h2 className="text-4xl sm:text-6xl font-extrabold tracking-tight text-slate-900 leading-[1.15]">
+                    Sinfingizni tanlang va maktabga{" "}
+                    <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-600 via-indigo-600 to-emerald-600">
+                      5 daqiqada
+                    </span>{" "}
+                    tayyor bo'ling!
+                  </h2>
 
-                <p className="mt-6 text-lg sm:text-xl text-slate-600 max-w-2xl mx-auto font-medium">
-                  1–7 sinf o'quvchilari uchun o'qituvchilar tasdiqlagan tayyor qurollar to'plami. Vaqtingizni bozorlarda o'tkazmang — bitta klik bilan uydan buyurtma bering!
-                </p>
+                  <p className="text-lg sm:text-xl text-slate-700 font-semibold max-w-2xl mx-auto">
+                    Vaqtingizni bozorlarda o'tkazmang — tayyor o'quv qurollari ro'yxatini ko'ring va eshigingizgacha kuryerda qabul qiling!
+                  </p>
 
-                <div className="mt-10 flex flex-col sm:flex-row items-center justify-center gap-4">
-                  <button
-                    onClick={() => {
-                      const el = document.getElementById("grade-assistant-section");
-                      el?.scrollIntoView({ behavior: "smooth" });
-                    }}
-                    className="w-full sm:w-auto px-8 py-4 rounded-2xl bg-gradient-to-r from-blue-600 via-indigo-600 to-blue-700 hover:from-blue-700 hover:to-indigo-800 text-white font-bold text-base shadow-xl shadow-blue-500/25 flex items-center justify-center gap-3 transition-all hover:-translate-y-0.5 active:translate-y-0 cursor-pointer"
-                  >
-                    <GraduationCap className="w-5 h-5" />
-                    <span>Sinf bo'yicha yig'ish</span>
-                    <ArrowRight className="w-4 h-4" />
-                  </button>
-                  <button
-                    onClick={() => setActiveTab("catalog")}
-                    className="w-full sm:w-auto px-8 py-4 rounded-2xl bg-white hover:bg-slate-50 text-slate-800 font-bold text-base border border-slate-200 shadow-sm flex items-center justify-center gap-2 transition-all hover:border-slate-300 cursor-pointer"
-                  >
-                    <span>🛍️ Katalogga o'tish</span>
-                  </button>
+                  <div className="pt-4 flex flex-col sm:flex-row items-center justify-center gap-4">
+                    <button
+                      onClick={() => {
+                        const el = document.getElementById("grade-assistant-section");
+                        el?.scrollIntoView({ behavior: "smooth" });
+                      }}
+                      className="w-full sm:w-auto px-8 py-4 rounded-2xl bg-gradient-to-r from-blue-600 via-indigo-600 to-blue-700 hover:from-blue-700 hover:to-indigo-800 text-white font-bold text-base shadow-xl shadow-blue-500/25 flex items-center justify-center gap-3 transition-all hover:-translate-y-0.5 active:translate-y-0 cursor-pointer"
+                    >
+                      <GraduationCap className="w-5 h-5" />
+                      <span>Sinf bo'yicha yig'ish</span>
+                      <ArrowRight className="w-4 h-4" />
+                    </button>
+                    <button
+                      onClick={() => setActiveTab("catalog")}
+                      className="w-full sm:w-auto px-8 py-4 rounded-2xl bg-white/90 hover:bg-white text-slate-900 font-bold text-base border border-slate-300 shadow-sm flex items-center justify-center gap-2 transition-all cursor-pointer"
+                    >
+                      <span>🛍️ 20+ Mahsulotlar Katalogi</span>
+                    </button>
+                  </div>
                 </div>
 
                 {/* Benefits 4-Card Grid */}
                 <div className="mt-16 grid grid-cols-2 md:grid-cols-4 gap-4 max-w-5xl mx-auto">
                   {[
-                    { icon: Truck, title: "1 Kunda Yetkazish", desc: "Toshkent va viloyatlarga tezkor kuryer", color: "text-blue-600 bg-blue-50" },
-                    { icon: ShieldCheck, title: "100% Sifat Kafolati", desc: "Faqat tekshirilgan brend mahsulotlar", color: "text-emerald-600 bg-emerald-50" },
-                    { icon: Sparkles, title: "50%-gacha Tejamkorlik", desc: "To'plam olganda maxsus chegirma", color: "text-purple-600 bg-purple-50" },
-                    { icon: Package, title: "Qulay To'lov", desc: "Qabul qilganda naqd yoki Payme/Click", color: "text-amber-600 bg-amber-50" },
+                    { icon: Truck, title: "1 Kunda Yetkazish", desc: "Toshkent va viloyatlarga tezkor kuryer", color: "text-blue-600 bg-blue-50/90" },
+                    { icon: ShieldCheck, title: "100% Sifat Kafolati", desc: "Faqat tekshirilgan brend mahsulotlar", color: "text-emerald-600 bg-emerald-50/90" },
+                    { icon: Sparkles, title: "50%-gacha Tejamkorlik", desc: "To'plam olganda maxsus chegirma", color: "text-purple-600 bg-purple-50/90" },
+                    { icon: Package, title: "Qulay To'lov", desc: "Qabul qilganda naqd yoki Payme/Click", color: "text-amber-600 bg-amber-50/90" },
                   ].map((item, idx) => (
                     <div key={idx} className="glass-card rounded-2xl p-5 text-left flex flex-col justify-between">
                       <div className={`w-12 h-12 rounded-xl ${item.color} flex items-center justify-center mb-3 shadow-sm`}>
@@ -649,7 +942,7 @@ export default function MaktabStartApp() {
                       </div>
                       <div>
                         <h3 className="font-bold text-slate-900 text-base">{item.title}</h3>
-                        <p className="text-xs text-slate-500 font-medium mt-1">{item.desc}</p>
+                        <p className="text-xs text-slate-600 font-medium mt-1">{item.desc}</p>
                       </div>
                     </div>
                   ))}
@@ -658,7 +951,7 @@ export default function MaktabStartApp() {
             </section>
 
             {/* GRADE ASSISTANT SECTION */}
-            <section id="grade-assistant-section" className="py-16 md:py-24 bg-white border-y border-slate-200/80">
+            <section id="grade-assistant-section" className="py-16 md:py-24 bg-white/90 backdrop-blur-md border-y border-slate-200/80">
               <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
                 <div className="text-center max-w-3xl mx-auto mb-12">
                   <span className="text-blue-600 font-bold text-xs sm:text-sm tracking-wider uppercase bg-blue-50 px-3 py-1 rounded-full">
@@ -773,7 +1066,7 @@ export default function MaktabStartApp() {
             </section>
 
             {/* POPULAR CATEGORIES */}
-            <section className="py-16 bg-slate-50">
+            <section className="py-16 bg-slate-50/90 backdrop-blur-md">
               <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
                 <div className="flex flex-col sm:flex-row items-start sm:items-end justify-between mb-10 gap-4">
                   <div>
@@ -795,7 +1088,7 @@ export default function MaktabStartApp() {
                     { name: "Daftarlar", count: 310, icon: BookOpen, color: "bg-emerald-50 text-emerald-600" },
                     { name: "Qalamlar", count: 450, icon: PenTool, color: "bg-purple-50 text-purple-600" },
                     { name: "Geometriya", count: 85, icon: Compass, color: "bg-amber-50 text-amber-600" },
-                    { name: "Maktab Formasi", count: 190, icon: GraduationCap, color: "bg-rose-50 text-rose-600" },
+                    { name: "Forma", count: 190, icon: GraduationCap, color: "bg-rose-50 text-rose-600" },
                     { name: "Aksessuarlar", count: 220, icon: Sparkles, color: "bg-cyan-50 text-cyan-600" },
                   ].map((cat, idx) => (
                     <div
@@ -818,66 +1111,33 @@ export default function MaktabStartApp() {
                 </div>
               </div>
             </section>
-
-            {/* BEST SELLERS GRID */}
-            <section className="py-16 bg-white">
-              <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-                <div className="text-center max-w-2xl mx-auto mb-12">
-                  <h2 className="text-2xl sm:text-3xl font-extrabold text-slate-900 tracking-tight">
-                    🔥 Hafta Xitlari & Eng Ko'p Sotilganlar
-                  </h2>
-                  <p className="text-slate-600 text-sm mt-1 font-medium">
-                    Ota-onalar va o'quvchilar eng ko'p tanlayotgan sifatli mahsulotlar
-                  </p>
-                </div>
-
-                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
-                  {PRODUCTS.slice(0, 4).map((prod) => (
-                    <div key={prod.id} className="group bg-white rounded-2xl p-4 border border-slate-200/80 shadow-soft hover:shadow-hover transition-all duration-300 flex flex-col justify-between relative">
-                      <div className="relative aspect-square w-full rounded-xl bg-slate-50 flex items-center justify-center text-3xl font-bold text-slate-500 overflow-hidden mb-4 border border-slate-100">
-                        <span className="group-hover:scale-110 transition-transform duration-500">{prod.imageText}</span>
-                        {prod.badge && <span className={`absolute top-3 left-3 text-white text-[11px] font-extrabold px-2.5 py-1 rounded-full shadow-sm ${prod.badgeColor}`}>{prod.badge}</span>}
-                        <button onClick={() => toggleWishlist(prod.id)} className="absolute top-3 right-3 w-8 h-8 rounded-full bg-white/90 backdrop-blur text-slate-600 hover:text-rose-500 flex items-center justify-center shadow-sm transition-colors">
-                          <Heart className={`w-4 h-4 ${wishlist.includes(prod.id) ? "text-rose-500 fill-rose-500" : ""}`} />
-                        </button>
-                      </div>
-
-                      <div>
-                        <div className="flex items-center justify-between text-xs text-slate-500 mb-1.5 font-semibold">
-                          <span className="bg-blue-50 text-blue-700 px-2 py-0.5 rounded text-[11px] font-bold">{prod.category}</span>
-                          <div className="flex items-center gap-1 text-amber-500 font-extrabold">
-                            <Star className="w-3.5 h-3.5 fill-current" />
-                            <span>{prod.rating}</span>
-                          </div>
-                        </div>
-                        <h3 className="font-bold text-slate-900 text-sm sm:text-base line-clamp-2 group-hover:text-blue-600 transition-colors mb-2">{prod.title}</h3>
-                      </div>
-
-                      <div className="pt-3 border-t border-slate-100 flex items-center justify-between mt-auto">
-                        <div>
-                          {prod.oldPrice && <span className="text-xs text-slate-400 line-through block font-medium">{prod.oldPrice.toLocaleString()} so'm</span>}
-                          <span className="text-lg font-extrabold text-slate-900">{prod.price.toLocaleString()} <span className="text-xs font-normal text-slate-500">so'm</span></span>
-                        </div>
-                        <button onClick={() => addToCart(prod, 1)} className="w-11 h-11 rounded-xl bg-blue-600 hover:bg-blue-700 text-white flex items-center justify-center shadow-md hover:shadow-lg transition-all active:scale-95 cursor-pointer">
-                          <Plus className="w-6 h-6 stroke-[3]" />
-                        </button>
-                      </div>
-                    </div>
-                  ))}
-                </div>
-              </div>
-            </section>
           </div>
         )}
 
         {/* ========================================================================= */}
-        {/* TAB 2: CATALOG & FILTERS */}
+        {/* TAB 2: CATALOG & FILTERS (WITH ROW-BY-ROW AND GRID TOGGLE) */}
         {/* ========================================================================= */}
         {activeTab === "catalog" && (
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10 animate-fade-in">
+            
+            {/* Search Notice if filtering */}
+            {searchQuery && (
+              <div className="bg-blue-600 text-white p-4 rounded-2xl mb-6 shadow-md flex items-center justify-between">
+                <div className="flex items-center gap-3">
+                  <Search className="w-5 h-5 animate-pulse" />
+                  <span className="font-bold text-sm sm:text-base">
+                    "{searchQuery}" bo'yicha qidiruv natijalari: <strong className="underline">{filteredProducts.length} ta mahsulot topildi</strong>
+                  </span>
+                </div>
+                <button onClick={() => setSearchQuery("")} className="px-3 py-1 bg-white/20 hover:bg-white/30 rounded-xl text-xs font-bold">
+                  Tozalash ✕
+                </button>
+              </div>
+            )}
+
             <div className="flex flex-col md:flex-row gap-8">
               {/* Left Sidebar Filters */}
-              <div className="w-full md:w-64 space-y-6 shrink-0 bg-white p-6 rounded-3xl border border-slate-200/80 shadow-sm h-fit">
+              <div className="w-full md:w-64 space-y-6 shrink-0 bg-white/95 backdrop-blur-md p-6 rounded-3xl border border-slate-200/80 shadow-sm h-fit">
                 <div className="flex items-center justify-between border-b pb-4">
                   <span className="font-extrabold text-base text-slate-900 flex items-center gap-2"><Filter className="w-4 h-4 text-blue-600" /> Filtrlar</span>
                   <button onClick={() => { setSelectedCategory("Barchasi"); setSelectedGradeFilter(null); setSearchQuery(""); }} className="text-xs font-bold text-rose-500 hover:underline cursor-pointer">Tozalash</button>
@@ -916,58 +1176,145 @@ export default function MaktabStartApp() {
                 </div>
               </div>
 
-              {/* Right Product Grid */}
+              {/* Right Product Grid / Row-by-Row List */}
               <div className="flex-1 space-y-6">
-                <div className="bg-white p-4 rounded-2xl border border-slate-200/80 flex flex-col sm:flex-row justify-between items-center gap-4">
-                  <span className="font-bold text-sm text-slate-700">Topildi: <strong className="text-blue-600">{filteredProducts.length}</strong> ta mahsulot</span>
-                  <div className="flex items-center gap-2">
-                    <span className="text-xs font-bold text-slate-500">Saralash:</span>
-                    <select
-                      value={sortBy}
-                      onChange={(e) => setSortBy(e.target.value as any)}
-                      className="bg-slate-50 border border-slate-200 rounded-xl px-3 py-1.5 text-xs font-bold text-slate-800 outline-none focus:border-blue-500"
-                    >
-                      <option value="popular">🔥 Ommabopligi</option>
-                      <option value="price-asc">💵 Arzonroq oldin</option>
-                      <option value="price-desc">💎 Qimmatroq oldin</option>
-                    </select>
+                <div className="bg-white/95 backdrop-blur-md p-4 rounded-2xl border border-slate-200/80 flex flex-col sm:flex-row justify-between items-center gap-4 shadow-sm">
+                  <span className="font-bold text-sm text-slate-700">Ko'rsatilmoqda: <strong className="text-blue-600">{filteredProducts.length}</strong> ta mahsulot</span>
+                  
+                  <div className="flex items-center gap-4">
+                    {/* View Mode Toggle: Row-by-Row vs Grid */}
+                    <div className="flex items-center bg-slate-100 p-1 rounded-xl border border-slate-200">
+                      <button
+                        onClick={() => setViewMode("list")}
+                        className={`px-3 py-1.5 rounded-lg text-xs font-extrabold flex items-center gap-1.5 transition-all ${viewMode === "list" ? "bg-white text-blue-600 shadow-sm" : "text-slate-600"}`}
+                        title="Qatorma-qator (List view)"
+                      >
+                        <List className="w-4 h-4" />
+                        <span className="hidden sm:inline">Qatorma-qator</span>
+                      </button>
+                      <button
+                        onClick={() => setViewMode("grid")}
+                        className={`px-3 py-1.5 rounded-lg text-xs font-extrabold flex items-center gap-1.5 transition-all ${viewMode === "grid" ? "bg-white text-blue-600 shadow-sm" : "text-slate-600"}`}
+                        title="Jadval (Grid view)"
+                      >
+                        <Grid className="w-4 h-4" />
+                        <span className="hidden sm:inline">Jadval</span>
+                      </button>
+                    </div>
+
+                    <div className="flex items-center gap-2">
+                      <span className="text-xs font-bold text-slate-500 hidden md:inline">Saralash:</span>
+                      <select
+                        value={sortBy}
+                        onChange={(e) => setSortBy(e.target.value as any)}
+                        className="bg-slate-50 border border-slate-200 rounded-xl px-3 py-1.5 text-xs font-bold text-slate-800 outline-none focus:border-blue-500"
+                      >
+                        <option value="popular">🔥 Ommabopligi</option>
+                        <option value="price-asc">💵 Arzonroq oldin</option>
+                        <option value="price-desc">💎 Qimmatroq oldin</option>
+                      </select>
+                    </div>
                   </div>
                 </div>
 
-                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-                  {filteredProducts.map((prod) => (
-                    <div key={prod.id} className="group bg-white rounded-2xl p-4 border border-slate-200/80 shadow-soft hover:shadow-hover transition-all duration-300 flex flex-col justify-between relative">
-                      <div className="relative aspect-square w-full rounded-xl bg-slate-50 flex items-center justify-center text-3xl font-bold text-slate-500 overflow-hidden mb-4 border border-slate-100">
-                        <span className="group-hover:scale-110 transition-transform duration-500">{prod.imageText}</span>
-                        {prod.badge && <span className={`absolute top-3 left-3 text-white text-[11px] font-extrabold px-2.5 py-1 rounded-full shadow-sm ${prod.badgeColor}`}>{prod.badge}</span>}
-                        <button onClick={() => toggleWishlist(prod.id)} className="absolute top-3 right-3 w-8 h-8 rounded-full bg-white/90 backdrop-blur text-slate-600 hover:text-rose-500 flex items-center justify-center shadow-sm transition-colors">
-                          <Heart className={`w-4 h-4 ${wishlist.includes(prod.id) ? "text-rose-500 fill-rose-500" : ""}`} />
-                        </button>
-                      </div>
-
-                      <div>
-                        <div className="flex items-center justify-between text-xs text-slate-500 mb-1.5 font-semibold">
-                          <span className="bg-blue-50 text-blue-700 px-2 py-0.5 rounded text-[11px] font-bold">{prod.category}</span>
-                          <div className="flex items-center gap-1 text-amber-500 font-extrabold">
-                            <Star className="w-3.5 h-3.5 fill-current" />
-                            <span>{prod.rating}</span>
+                {filteredProducts.length === 0 ? (
+                  <div className="bg-white rounded-3xl p-12 text-center border border-slate-200 space-y-4 shadow-sm">
+                    <Search className="w-16 h-16 text-slate-300 mx-auto stroke-1" />
+                    <h3 className="font-extrabold text-xl text-slate-800">Hech narsa topilmadi...</h3>
+                    <p className="text-sm text-slate-500 max-w-md mx-auto">
+                      Qidiruv so'zini yoki tanlangan kategoriyani o'zgartirib ko'ring (Masalan: ruchka, daftar, ryukzak).
+                    </p>
+                    <button onClick={() => { setSearchQuery(""); setSelectedCategory("Barchasi"); setSelectedGradeFilter(null); }} className="px-6 py-2.5 rounded-xl bg-blue-600 text-white font-bold text-sm shadow">
+                      Barcha mahsulotlarni ko'rish
+                    </button>
+                  </div>
+                ) : viewMode === "list" ? (
+                  /* ROW-BY-ROW LIST VIEW (AS REQUESTED BY USER) */
+                  <div className="space-y-4">
+                    {filteredProducts.map((prod) => (
+                      <div
+                        key={prod.id}
+                        className="bg-white/95 backdrop-blur-md rounded-2xl p-4 sm:p-5 border border-slate-200/80 shadow-soft hover:shadow-hover transition-all flex flex-col sm:flex-row items-center justify-between gap-6 group"
+                      >
+                        <div className="flex items-center gap-4 w-full sm:w-auto">
+                          <div className="w-20 h-20 sm:w-24 sm:h-24 rounded-2xl bg-slate-50 flex items-center justify-center text-4xl border border-slate-100 shrink-0 group-hover:scale-105 transition-transform shadow-sm relative">
+                            <span>{prod.imageText.split(" ")[0]}</span>
+                            {prod.badge && <span className={`absolute -top-2 -left-2 text-white text-[10px] font-extrabold px-2 py-0.5 rounded-full shadow-sm ${prod.badgeColor}`}>{prod.badge}</span>}
+                          </div>
+                          <div className="space-y-1 min-w-0">
+                            <div className="flex items-center gap-2">
+                              <span className="bg-blue-50 text-blue-700 px-2.5 py-0.5 rounded-full text-xs font-bold">{prod.category}</span>
+                              <span className="text-xs text-slate-400 font-medium">Sinflar: {prod.grade.join(", ")}-sinf</span>
+                            </div>
+                            <h3 className="font-extrabold text-slate-900 text-base sm:text-lg group-hover:text-blue-600 transition-colors line-clamp-1">{prod.title}</h3>
+                            <p className="text-xs text-slate-500 line-clamp-1 font-medium">{prod.description}</p>
+                            <div className="flex items-center gap-1 text-amber-500 font-extrabold text-xs pt-1">
+                              <Star className="w-3.5 h-3.5 fill-current" />
+                              <span>{prod.rating}</span>
+                              <span className="text-slate-400 font-normal">({prod.reviews} ta sharh)</span>
+                            </div>
                           </div>
                         </div>
-                        <h3 className="font-bold text-slate-900 text-sm sm:text-base line-clamp-2 group-hover:text-blue-600 transition-colors mb-2">{prod.title}</h3>
-                      </div>
 
-                      <div className="pt-3 border-t border-slate-100 flex items-center justify-between mt-auto">
-                        <div>
-                          {prod.oldPrice && <span className="text-xs text-slate-400 line-through block font-medium">{prod.oldPrice.toLocaleString()} so'm</span>}
-                          <span className="text-lg font-extrabold text-slate-900">{prod.price.toLocaleString()} <span className="text-xs font-normal text-slate-500">so'm</span></span>
+                        <div className="flex sm:flex-col items-center sm:items-end justify-between w-full sm:w-auto pt-4 sm:pt-0 border-t sm:border-0 border-slate-100 gap-3">
+                          <div className="text-left sm:text-right">
+                            {prod.oldPrice && <span className="text-xs text-slate-400 line-through block font-semibold">{prod.oldPrice.toLocaleString()} so'm</span>}
+                            <span className="text-xl font-extrabold text-slate-900">{prod.price.toLocaleString()} <span className="text-xs font-normal text-slate-500">so'm</span></span>
+                          </div>
+                          <div className="flex items-center gap-2">
+                            <button onClick={() => toggleWishlist(prod.id)} className="w-10 h-10 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-600 hover:text-rose-500 flex items-center justify-center transition-colors">
+                              <Heart className={`w-5 h-5 ${wishlist.includes(prod.id) ? "text-rose-500 fill-rose-500" : ""}`} />
+                            </button>
+                            <button
+                              onClick={() => addToCart(prod, 1)}
+                              className="px-5 py-2.5 rounded-xl bg-blue-600 hover:bg-blue-700 text-white font-extrabold text-xs sm:text-sm shadow-md hover:shadow-lg transition-all active:scale-95 flex items-center gap-2 cursor-pointer"
+                            >
+                              <Plus className="w-4 h-4 stroke-[3]" />
+                              <span>Savatga</span>
+                            </button>
+                          </div>
                         </div>
-                        <button onClick={() => addToCart(prod, 1)} className="w-11 h-11 rounded-xl bg-blue-600 hover:bg-blue-700 text-white flex items-center justify-center shadow-md hover:shadow-lg transition-all active:scale-95 cursor-pointer">
-                          <Plus className="w-6 h-6 stroke-[3]" />
-                        </button>
                       </div>
-                    </div>
-                  ))}
-                </div>
+                    ))}
+                  </div>
+                ) : (
+                  /* GRID VIEW */
+                  <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+                    {filteredProducts.map((prod) => (
+                      <div key={prod.id} className="group bg-white/95 backdrop-blur-md rounded-2xl p-4 border border-slate-200/80 shadow-soft hover:shadow-hover transition-all duration-300 flex flex-col justify-between relative">
+                        <div className="relative aspect-square w-full rounded-xl bg-slate-50 flex items-center justify-center text-3xl font-bold text-slate-500 overflow-hidden mb-4 border border-slate-100">
+                          <span className="group-hover:scale-110 transition-transform duration-500">{prod.imageText}</span>
+                          {prod.badge && <span className={`absolute top-3 left-3 text-white text-[11px] font-extrabold px-2.5 py-1 rounded-full shadow-sm ${prod.badgeColor}`}>{prod.badge}</span>}
+                          <button onClick={() => toggleWishlist(prod.id)} className="absolute top-3 right-3 w-8 h-8 rounded-full bg-white/90 backdrop-blur text-slate-600 hover:text-rose-500 flex items-center justify-center shadow-sm transition-colors">
+                            <Heart className={`w-4 h-4 ${wishlist.includes(prod.id) ? "text-rose-500 fill-rose-500" : ""}`} />
+                          </button>
+                        </div>
+
+                        <div>
+                          <div className="flex items-center justify-between text-xs text-slate-500 mb-1.5 font-semibold">
+                            <span className="bg-blue-50 text-blue-700 px-2 py-0.5 rounded text-[11px] font-bold">{prod.category}</span>
+                            <div className="flex items-center gap-1 text-amber-500 font-extrabold">
+                              <Star className="w-3.5 h-3.5 fill-current" />
+                              <span>{prod.rating}</span>
+                            </div>
+                          </div>
+                          <h3 className="font-bold text-slate-900 text-sm sm:text-base line-clamp-2 group-hover:text-blue-600 transition-colors mb-2">{prod.title}</h3>
+                          <p className="text-xs text-slate-500 line-clamp-2 font-medium mb-3">{prod.description}</p>
+                        </div>
+
+                        <div className="pt-3 border-t border-slate-100 flex items-center justify-between mt-auto">
+                          <div>
+                            {prod.oldPrice && <span className="text-xs text-slate-400 line-through block font-medium">{prod.oldPrice.toLocaleString()} so'm</span>}
+                            <span className="text-lg font-extrabold text-slate-900">{prod.price.toLocaleString()} <span className="text-xs font-normal text-slate-500">so'm</span></span>
+                          </div>
+                          <button onClick={() => addToCart(prod, 1)} className="w-11 h-11 rounded-xl bg-blue-600 hover:bg-blue-700 text-white flex items-center justify-center shadow-md hover:shadow-lg transition-all active:scale-95 cursor-pointer">
+                            <Plus className="w-6 h-6 stroke-[3]" />
+                          </button>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                )}
               </div>
             </div>
           </div>
@@ -995,7 +1342,7 @@ export default function MaktabStartApp() {
             </div>
 
             {/* Checklist Items */}
-            <div className="bg-white rounded-3xl p-6 sm:p-8 border border-slate-200 shadow-sm space-y-4">
+            <div className="bg-white/95 backdrop-blur-md rounded-3xl p-6 sm:p-8 border border-slate-200 shadow-sm space-y-4">
               <h3 className="font-extrabold text-lg text-slate-900 border-b pb-4">Maktab buyumlari ro'yxati (Bosing va belgilang):</h3>
               <div className="space-y-3">
                 {checklist.map((item) => (
@@ -1041,7 +1388,7 @@ export default function MaktabStartApp() {
         {/* ========================================================================= */}
         {activeTab === "calculator" && (
           <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-12 animate-fade-in">
-            <div className="bg-white rounded-3xl p-8 border border-slate-200 shadow-xl space-y-8">
+            <div className="bg-white/95 backdrop-blur-md rounded-3xl p-8 border border-slate-200 shadow-xl space-y-8">
               <div className="text-center max-w-xl mx-auto">
                 <div className="w-14 h-14 rounded-2xl bg-gradient-to-br from-amber-500 to-orange-600 text-white flex items-center justify-center mx-auto mb-4 shadow-lg shadow-amber-500/25">
                   <Calculator className="w-7 h-7" />
@@ -1095,10 +1442,76 @@ export default function MaktabStartApp() {
             </div>
           </div>
         )}
+
+        {/* ========================================================================= */}
+        {/* TAB 5: USER ACCOUNT / KABINET */}
+        {/* ========================================================================= */}
+        {activeTab === "account" && (
+          <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-12 animate-fade-in">
+            <div className="bg-white/95 backdrop-blur-md rounded-3xl p-8 border border-slate-200 shadow-xl space-y-8">
+              <div className="flex flex-col sm:flex-row items-center justify-between gap-6 border-b pb-6">
+                <div className="flex items-center gap-4">
+                  <div className="w-20 h-20 rounded-2xl bg-gradient-to-tr from-blue-600 to-indigo-600 text-white flex items-center justify-center text-3xl font-extrabold shadow-lg">
+                    {user.role === "Ota-ona" ? "👨‍👩‍👦" : user.role === "O'quvchi" ? "🎒" : "👩‍🏫"}
+                  </div>
+                  <div>
+                    <span className="bg-blue-50 text-blue-700 font-bold text-xs px-2.5 py-0.5 rounded-full uppercase">{user.role}</span>
+                    <h2 className="text-2xl font-extrabold text-slate-900 mt-1">{user.name}</h2>
+                    <span className="text-sm text-slate-500 font-semibold">{user.phone}</span>
+                  </div>
+                </div>
+                <button
+                  onClick={handleLogout}
+                  className="px-5 py-2.5 rounded-xl bg-rose-50 hover:bg-rose-100 text-rose-600 font-bold text-xs flex items-center gap-2 transition-colors cursor-pointer"
+                >
+                  <LogOut className="w-4 h-4" />
+                  <span>Tizimdan chiqish</span>
+                </button>
+              </div>
+
+              {/* Account Orders & Wishlist status */}
+              <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+                <div className="p-5 rounded-2xl bg-slate-50 border border-slate-200/80 text-center space-y-1">
+                  <ShoppingBag className="w-6 h-6 text-blue-600 mx-auto mb-2" />
+                  <span className="text-2xl font-extrabold text-slate-900">2 ta</span>
+                  <span className="text-xs text-slate-500 font-bold block">Faol buyurtmalar</span>
+                </div>
+                <div className="p-5 rounded-2xl bg-slate-50 border border-slate-200/80 text-center space-y-1">
+                  <Heart className="w-6 h-6 text-rose-500 mx-auto mb-2" />
+                  <span className="text-2xl font-extrabold text-slate-900">{wishlist.length} ta</span>
+                  <span className="text-xs text-slate-500 font-bold block">Sevimli mahsulotlar</span>
+                </div>
+                <div className="p-5 rounded-2xl bg-slate-50 border border-slate-200/80 text-center space-y-1">
+                  <Award className="w-6 h-6 text-amber-500 mx-auto mb-2" />
+                  <span className="text-2xl font-extrabold text-slate-900">150 Ball</span>
+                  <span className="text-xs text-slate-500 font-bold block">Bonus ballaringiz</span>
+                </div>
+              </div>
+
+              {/* Order History */}
+              <div>
+                <h3 className="font-extrabold text-lg text-slate-900 mb-4">So'nggi buyurtmalar tarixi:</h3>
+                <div className="p-4 rounded-2xl border border-slate-200 bg-slate-50 flex items-center justify-between text-sm">
+                  <div className="flex items-center gap-3">
+                    <span className="w-2.5 h-2.5 rounded-full bg-emerald-500" />
+                    <div>
+                      <h4 className="font-bold text-slate-900">Buyurtma #M-2026-001</h4>
+                      <span className="text-xs text-slate-500">1-Sinf Boshlang'ich to'plami (54 ta buyum)</span>
+                    </div>
+                  </div>
+                  <div className="text-right">
+                    <span className="font-extrabold text-blue-600">245,000 so'm</span>
+                    <span className="text-xs text-emerald-600 font-bold block">Kuryer yo'lda 🚚</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        )}
       </main>
 
       {/* FOOTER */}
-      <footer className="bg-slate-900 text-slate-400 py-12 border-t border-slate-800 mt-auto font-sans">
+      <footer className="bg-slate-900 text-slate-400 py-12 border-t border-slate-800 mt-auto font-sans relative z-10">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 grid grid-cols-1 md:grid-cols-4 gap-8">
           <div>
             <div className="flex items-center gap-2 text-white font-extrabold text-lg mb-4">
