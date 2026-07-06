@@ -55,7 +55,7 @@ interface Product {
   reviews: number;
   badge?: string;
   badgeColor?: string;
-  imageText: string;
+  image: string;
   inStock: boolean;
   description: string;
 }
@@ -69,10 +69,11 @@ interface UserAccount {
   name: string;
   phone: string;
   role: "Ota-ona" | "O'quvchi" | "O'qituvchi";
+  avatar: string;
   isLoggedIn: boolean;
 }
 
-// Background Study Images (3-4 Premium Unsplash Photos with Blur)
+// Background Study Images (4 Premium Unsplash Photos with Blur)
 const STUDY_BACKGROUNDS = [
   "https://images.unsplash.com/photo-1503676260728-1c00da094a0b?q=80&w=2000&auto=format&fit=crop", // School supplies & books
   "https://images.unsplash.com/photo-1577896851231-70ef18881754?q=80&w=2000&auto=format&fit=crop", // Study table & stationery
@@ -80,24 +81,24 @@ const STUDY_BACKGROUNDS = [
   "https://images.unsplash.com/photo-1580582932707-520aed937b7b?q=80&w=2000&auto=format&fit=crop", // Backpack & pencils
 ];
 
-// Expanded 20+ Mock Products for Accurate Search
+// Expanded 16+ Real School Products with HIGH-RESOLUTION PHOTOS (Uzbekistan Favorites)
 const PRODUCTS: Product[] = [
-  { id: 1, title: "Ortopedik Maktab Ryukzagi 'Pro-Ergo 2026'", price: 245000, oldPrice: 310000, category: "Maktab Sumkalari", grade: [1, 2, 3, 4], rating: 4.9, reviews: 128, badge: "-21%", badgeColor: "bg-emerald-500", imageText: "🎒 Pro Ryukzak", inStock: true, description: "Belni asrovchi ortopedik suyanchiq, suv o'tkazmas mato va yorug'lik qaytaruvchi chiziqlari bor." },
-  { id: 2, title: "Premium 12-Varaqli Daftarlar To'plami (10 ta)", price: 18000, oldPrice: 24000, category: "Daftarlar", grade: [1, 2, 3, 4, 5, 6, 7], rating: 4.8, reviews: 340, badge: "Xit Sotuv", badgeColor: "bg-blue-600", imageText: "📓 10x Daftar", inStock: true, description: "Oq farfor qog'ozli, ko'zni toliqtirmaydigan chiziqli va katakli daftarlar to'plami." },
-  { id: 3, title: "Maped ColorPeps 24-Rangli Qalamlar To'plami", price: 45000, oldPrice: 58000, category: "Qalamlar", grade: [1, 2, 3, 4, 5, 6, 7], rating: 5.0, reviews: 89, badge: "Yangi", badgeColor: "bg-purple-600", imageText: "✏️ 24x Qalam", inStock: true, description: "Yumshoq yozadigan, sinishga chidamli va yorqin rangli ekologik qalamlar." },
-  { id: 4, title: "Metall Tsirkul (Sirkul) va Geometriya Pro To'plami", price: 35000, oldPrice: 45000, category: "Geometriya", grade: [5, 6, 7], rating: 4.7, reviews: 64, badge: "-22%", badgeColor: "bg-emerald-500", imageText: "📐 Geometriya", inStock: true, description: "Tsirkul, chizg'ich, transportir va o'chirg'ichdan iborat po'lat qurollar to'plami." },
-  { id: 5, title: "Ergonomik Sharli Ruchkalar 10 ta (Ko'k va Qora)", price: 22000, oldPrice: 28000, category: "Ruchkalar", grade: [1, 2, 3, 4, 5, 6, 7], rating: 4.9, reviews: 210, badge: "Top Sifat", badgeColor: "bg-blue-600", imageText: "🖊️ 10x Ruchka", inStock: true, description: "0.5mm ingichka yozadigan, siyohi oqib ketmaydigan qo'lga qulay ruchkalar." },
-  { id: 6, title: "Maktab Formasi Oq Ko'ylak (100% Paxta)", price: 120000, oldPrice: 150000, category: "Forma", grade: [1, 2, 3, 4, 5, 6, 7], rating: 4.8, reviews: 95, badge: "-20%", badgeColor: "bg-emerald-500", imageText: "👔 Oq Ko'ylak", inStock: true, description: "Terlatmaydigan tabiiy paxta matodan tutilgan rasmiy maktab ko'ylagi." },
-  { id: 7, title: "Suv Uchun Thermo-Butilka (500ml, Zanglamas)", price: 65000, oldPrice: 85000, category: "Aksessuarlar", grade: [1, 2, 3, 4, 5, 6, 7], rating: 4.9, reviews: 156, badge: "Yangi", badgeColor: "bg-purple-600", imageText: "🍶 Termos", inStock: true, description: "12 soat davomida suvni issiq yoki yaxna saqlab beruvchi po'lat termos idish." },
-  { id: 8, title: "San'at va Chizmachilik Albomi (40 varaq, qalin)", price: 15000, oldPrice: 20000, category: "Daftarlar", grade: [1, 2, 3, 4, 5, 6, 7], rating: 4.7, reviews: 78, badge: "Arzon", badgeColor: "bg-amber-500", imageText: "🎨 Albom", inStock: true, description: "Akvarel va gouash bo'yoqlari uchun o'qilmaydigan qalin qog'ozli albom." },
-  { id: 9, title: "Urban Pro USB Noutbuk Ryukzagi (Katta Sinf)", price: 290000, oldPrice: 380000, category: "Maktab Sumkalari", grade: [5, 6, 7], rating: 5.0, reviews: 112, badge: "-23%", badgeColor: "bg-emerald-500", imageText: "💼 Urban Bag", inStock: true, description: "USB zaryad portiga ega, zamonaviy dizaynli va ko'p bo'limli ryukzak." },
-  { id: 10, title: "Akril Bo'yoqlar 12-Rangli To'plami (Mo'yqalam bilan)", price: 38000, oldPrice: 48000, category: "Qalamlar", grade: [2, 3, 4, 5], rating: 4.8, reviews: 84, badge: "San'at", badgeColor: "bg-pink-600", imageText: "🖌️ Bo'yoqlar", inStock: true, description: "Yorqin qurimaydigan akril bo'yoqlar va 2 ta professional mo'yqalam." },
-  { id: 11, title: "Maktab Penali 'Smart Organizer' (3 bo'limli)", price: 45000, oldPrice: 55000, category: "Aksessuarlar", grade: [1, 2, 3, 4, 5], rating: 4.9, reviews: 140, badge: "Hit", badgeColor: "bg-blue-600", imageText: "👝 Penal", inStock: true, description: "50 ta ruchka va qalam sig'adigan, zamonaviy va chidamli maktab penali." },
-  { id: 12, title: "Umumiy 48-Varaqli Daftarlar To'plami (5 ta)", price: 25000, oldPrice: 32000, category: "Daftarlar", grade: [5, 6, 7], rating: 4.9, reviews: 190, badge: "Top", badgeColor: "bg-emerald-500", imageText: "📚 48x Daftar", inStock: true, description: "Fizika, kimyo va algebra fanlari uchun qalin muqovali sifatli daftarlar." },
-  { id: 13, title: "Avtomat Qalam o'chirish quroli va o'chirg'ichlar", price: 12000, oldPrice: 16000, category: "Qalamlar", grade: [1, 2, 3, 4, 5, 6, 7], rating: 4.8, reviews: 88, badge: "Arzon", badgeColor: "bg-amber-500", imageText: "🧽 O'chirg'ich", inStock: true, description: "Qog'ozni yirtmasdan tozalovchi yumshoq o'chirg'ichlar va qalam yo'ng'ich." },
-  { id: 14, title: "Maktab Formasi To'q Ko'k Shim va Yubka", price: 145000, oldPrice: 180000, category: "Forma", grade: [1, 2, 3, 4, 5, 6, 7], rating: 4.8, reviews: 76, badge: "-19%", badgeColor: "bg-emerald-500", imageText: "👖 Shim/Yubka", inStock: true, description: "G'ijim bo'lmaydigan, yuvishga chidamli yuqori sifatli maktab shimi va yubkasi." },
-  { id: 15, title: "Plastilin 12-Rang va Haykaltaroshlik Qurollari", price: 20000, oldPrice: 26000, category: "Qalamlar", grade: [1, 2, 3], rating: 4.7, reviews: 92, badge: "Boshlang'ich", badgeColor: "bg-purple-600", imageText: "🎨 Plastilin", inStock: true, description: "Qo'lga yopishmaydigan, xavfsiz va yorqin bolalar plastilini to'plami." },
-  { id: 16, title: "Eko Lanch-boks (Ovqat idishi + Qoshiq-vilka)", price: 55000, oldPrice: 70000, category: "Aksessuarlar", grade: [1, 2, 3, 4, 5, 6, 7], rating: 5.0, reviews: 205, badge: "Eko", badgeColor: "bg-teal-600", imageText: "🍱 Lanchboks", inStock: true, description: "Bolalar tushlik ovqati uchun issiq saqlovchi bo'limli oziq-ovqat idishi." },
+  { id: 1, title: "Ortopedik Maktab Ryukzagi 'Pro-Ergo 2026'", price: 245000, oldPrice: 310000, category: "Maktab Sumkalari", grade: [1, 2, 3, 4], rating: 4.9, reviews: 128, badge: "-21%", badgeColor: "bg-emerald-500", image: "https://images.unsplash.com/photo-1553062407-98eeb64c6a62?q=80&w=800&auto=format&fit=crop", inStock: true, description: "Belni asrovchi ortopedik suyanchiq, suv o'tkazmas mato va yorug'lik qaytaruvchi chiziqlari bor." },
+  { id: 2, title: "Premium 12-Varaqli Daftarlar To'plami (10 ta)", price: 18000, oldPrice: 24000, category: "Daftarlar", grade: [1, 2, 3, 4, 5, 6, 7], rating: 4.8, reviews: 340, badge: "Xit Sotuv", badgeColor: "bg-blue-600", image: "https://images.unsplash.com/photo-1531346878377-a5be20888e57?q=80&w=800&auto=format&fit=crop", inStock: true, description: "Oq farfor qog'ozli, ko'zni toliqtirmaydigan chiziqli va katakli O'zbekiston standartidagi daftarlar." },
+  { id: 3, title: "Maped ColorPeps 24-Rangli Qalamlar To'plami", price: 45000, oldPrice: 58000, category: "Qalamlar", grade: [1, 2, 3, 4, 5, 6, 7], rating: 5.0, reviews: 89, badge: "Yangi", badgeColor: "bg-purple-600", image: "https://images.unsplash.com/photo-1513542789411-b6a5d4f31634?q=80&w=800&auto=format&fit=crop", inStock: true, description: "Yumshoq yozadigan, sinishga chidamli va yorqin rangli ekologik qalamlar." },
+  { id: 4, title: "Metall Tsirkul (Sirkul) va Geometriya Pro To'plami", price: 35000, oldPrice: 45000, category: "Geometriya", grade: [5, 6, 7], rating: 4.7, reviews: 64, badge: "-22%", badgeColor: "bg-emerald-500", image: "https://images.unsplash.com/photo-1509228468518-180dd4864904?q=80&w=800&auto=format&fit=crop", inStock: true, description: "Tsirkul, chizg'ich, transportir va o'chirg'ichdan iborat po'lat qurollar to'plami." },
+  { id: 5, title: "Ergonomik Sharli Ruchkalar 10 ta (Ko'k va Qora)", price: 22000, oldPrice: 28000, category: "Ruchkalar", grade: [1, 2, 3, 4, 5, 6, 7], rating: 4.9, reviews: 210, badge: "Top Sifat", badgeColor: "bg-blue-600", image: "https://images.unsplash.com/photo-1583485088034-697b5bc54ccd?q=80&w=800&auto=format&fit=crop", inStock: true, description: "0.5mm ingichka yozadigan, siyohi oqib ketmaydigan qo'lga qulay ruchkalar." },
+  { id: 6, title: "Maktab Formasi Oq Ko'ylak (100% Paxta)", price: 120000, oldPrice: 150000, category: "Forma", grade: [1, 2, 3, 4, 5, 6, 7], rating: 4.8, reviews: 95, badge: "-20%", badgeColor: "bg-emerald-500", image: "https://images.unsplash.com/photo-1620799140408-edc6dcb6d633?q=80&w=800&auto=format&fit=crop", inStock: true, description: "Terlatmaydigan tabiiy paxta matodan tutilgan rasmiy maktab ko'ylagi." },
+  { id: 7, title: "Suv Uchun Thermo-Butilka (500ml, Zanglamas)", price: 65000, oldPrice: 85000, category: "Aksessuarlar", grade: [1, 2, 3, 4, 5, 6, 7], rating: 4.9, reviews: 156, badge: "Yangi", badgeColor: "bg-purple-600", image: "https://images.unsplash.com/photo-1602143407151-7111542de6e8?q=80&w=800&auto=format&fit=crop", inStock: true, description: "12 soat davomida suvni issiq yoki yaxna saqlab beruvchi po'lat termos idish." },
+  { id: 8, title: "San'at va Chizmachilik Albomi (40 varaq, qalin)", price: 15000, oldPrice: 20000, category: "Daftarlar", grade: [1, 2, 3, 4, 5, 6, 7], rating: 4.7, reviews: 78, badge: "Arzon", badgeColor: "bg-amber-500", image: "https://images.unsplash.com/photo-1513364776144-60967b0f800f?q=80&w=800&auto=format&fit=crop", inStock: true, description: "Akvarel, gouash va qalamda rasm chizish uchun o'qilmaydigan qalin qog'ozli albom." },
+  { id: 9, title: "Urban Pro USB Noutbuk Ryukzagi (Katta Sinf)", price: 290000, oldPrice: 380000, category: "Maktab Sumkalari", grade: [5, 6, 7], rating: 5.0, reviews: 112, badge: "-23%", badgeColor: "bg-emerald-500", image: "https://images.unsplash.com/photo-1622560480605-d83c853bc5c3?q=80&w=800&auto=format&fit=crop", inStock: true, description: "USB zaryad portiga ega, zamonaviy dizaynli va ko'p bo'limli ryukzak." },
+  { id: 10, title: "Akril Bo'yoqlar 12-Rangli To'plami (Mo'yqalam bilan)", price: 38000, oldPrice: 48000, category: "Qalamlar", grade: [2, 3, 4, 5], rating: 4.8, reviews: 84, badge: "San'at", badgeColor: "bg-pink-600", image: "https://images.unsplash.com/photo-1579783900882-c0d3dad7b119?q=80&w=800&auto=format&fit=crop", inStock: true, description: "Yorqin qurimaydigan akril bo'yoqlar va 2 ta professional mo'yqalam." },
+  { id: 11, title: "Maktab Penali 'Smart Organizer' (3 bo'limli)", price: 45000, oldPrice: 55000, category: "Aksessuarlar", grade: [1, 2, 3, 4, 5], rating: 4.9, reviews: 140, badge: "Hit", badgeColor: "bg-blue-600", image: "https://images.unsplash.com/photo-1585336261026-7a466aad4079?q=80&w=800&auto=format&fit=crop", inStock: true, description: "50 ta ruchka va qalam sig'adigan, zamonaviy va chidamli maktab penali." },
+  { id: 12, title: "Umumiy 48-Varaqli Daftarlar To'plami (5 ta)", price: 25000, oldPrice: 32000, category: "Daftarlar", grade: [5, 6, 7], rating: 4.9, reviews: 190, badge: "Top", badgeColor: "bg-emerald-500", image: "https://images.unsplash.com/photo-1544716278-ca5e3f4abd8c?q=80&w=800&auto=format&fit=crop", inStock: true, description: "Fizika, kimyo va algebra fanlari uchun qalin muqovali sifatli daftarlar." },
+  { id: 13, title: "Avtomat Qalam yo'ng'ich va o'chirg'ichlar", price: 12000, oldPrice: 16000, category: "Qalamlar", grade: [1, 2, 3, 4, 5, 6, 7], rating: 4.8, reviews: 88, badge: "Arzon", badgeColor: "bg-amber-500", image: "https://images.unsplash.com/photo-1569683795645-b62e50fbf103?q=80&w=800&auto=format&fit=crop", inStock: true, description: "Qog'ozni yirtmasdan tozalovchi yumshoq o'chirg'ichlar va qalam yo'ng'ich." },
+  { id: 14, title: "Maktab Formasi To'q Ko'k Shim va Yubka", price: 145000, oldPrice: 180000, category: "Forma", grade: [1, 2, 3, 4, 5, 6, 7], rating: 4.8, reviews: 76, badge: "-19%", badgeColor: "bg-emerald-500", image: "https://images.unsplash.com/photo-1594938298603-c8148c4dae35?q=80&w=800&auto=format&fit=crop", inStock: true, description: "G'ijim bo'lmaydigan, yuvishga chidamli yuqori sifatli maktab shimi va yubkasi." },
+  { id: 15, title: "Plastilin 12-Rang va Haykaltaroshlik Qurollari", price: 20000, oldPrice: 26000, category: "Qalamlar", grade: [1, 2, 3], rating: 4.7, reviews: 92, badge: "Boshlang'ich", badgeColor: "bg-purple-600", image: "https://images.unsplash.com/photo-1513542789411-b6a5d4f31634?q=80&w=800&auto=format&fit=crop", inStock: true, description: "Qo'lga yopishmaydigan, xavfsiz va yorqin bolalar plastilini to'plami." },
+  { id: 16, title: "Eko Lanch-boks (Ovqat idishi + Qoshiq-vilka)", price: 55000, oldPrice: 70000, category: "Aksessuarlar", grade: [1, 2, 3, 4, 5, 6, 7], rating: 5.0, reviews: 205, badge: "Eko", badgeColor: "bg-teal-600", image: "https://images.unsplash.com/photo-1546069901-ba9599a7e63c?q=80&w=800&auto=format&fit=crop", inStock: true, description: "Bolalar tushlik ovqati uchun issiq saqlovchi bo'limli oziq-ovqat idishi." },
 ];
 
 const GRADE_PACKAGES: Record<number, { title: string; price: number; oldPrice: number; items: string[]; bg: string }> = {
@@ -118,12 +119,13 @@ export default function MaktabStartApp() {
   const [selectedGrade, setSelectedGrade] = useState<number>(5);
   const [bgIndex, setBgIndex] = useState(0);
   
-  // User Authentication State
+  // User Authentication State (WITH MIRJALOL's GITHUB PROFILE AVATAR BY DEFAULT!)
   const [user, setUser] = useState<UserAccount>({
-    name: "Jasur Karimov",
+    name: "Mirjalol Muhammadkarimov",
     phone: "+998 90 123 45 67",
     role: "Ota-ona",
-    isLoggedIn: false,
+    avatar: "https://github.com/muhammadkarimovmirjalol-ctrl.png",
+    isLoggedIn: true, // Logged in by default so the user immediately sees THEIR photo!
   });
   const [isLoginModalOpen, setIsLoginModalOpen] = useState(false);
   const [loginPhone, setLoginPhone] = useState("+998 ");
@@ -132,7 +134,7 @@ export default function MaktabStartApp() {
   const [showPassword, setShowPassword] = useState(false);
 
   // Purpose Intro Modal State
-  const [showPurposeModal, setShowPurposeModal] = useState(true);
+  const [showPurposeModal, setShowPurposeModal] = useState(false); // Can be opened via header button
 
   // Cart & Wishlist state
   const [cart, setCart] = useState<CartItem[]>([
@@ -148,7 +150,7 @@ export default function MaktabStartApp() {
   const [selectedCategory, setSelectedCategory] = useState("Barchasi");
   const [selectedGradeFilter, setSelectedGradeFilter] = useState<number | null>(null);
   const [sortBy, setSortBy] = useState<"popular" | "price-asc" | "price-desc">("popular");
-  const [viewMode, setViewMode] = useState<"grid" | "list">("list"); // Default Row-by-Row as requested!
+  const [viewMode, setViewMode] = useState<"list" | "grid">("list"); // Default Row-by-Row!
 
   // Checklist State
   const [checklist, setChecklist] = useState([
@@ -237,9 +239,10 @@ export default function MaktabStartApp() {
   const handleLogin = (e: React.FormEvent) => {
     e.preventDefault();
     setUser({
-      name: loginPhone.length > 6 ? `Foydalanuvchi (${loginPhone.slice(-4)})` : "Jasur Karimov",
+      name: loginPhone.length > 6 ? `Mirjalol (${loginPhone.slice(-4)})` : "Mirjalol Muhammadkarimov",
       phone: loginPhone,
       role: loginRole,
+      avatar: "https://github.com/muhammadkarimovmirjalol-ctrl.png",
       isLoggedIn: true,
     });
     setIsLoginModalOpen(false);
@@ -515,8 +518,8 @@ export default function MaktabStartApp() {
               ) : (
                 cart.map((item) => (
                   <div key={item.product.id} className="p-3.5 rounded-2xl bg-slate-50 border border-slate-200/80 flex gap-3 items-center">
-                    <div className="w-14 h-14 rounded-xl bg-white flex items-center justify-center text-3xl shadow-sm shrink-0">
-                      {item.product.imageText.split(" ")[0]}
+                    <div className="w-14 h-14 rounded-xl bg-white overflow-hidden shadow-sm shrink-0 border border-slate-100">
+                      <img src={item.product.image} alt={item.product.title} className="w-full h-full object-cover" />
                     </div>
                     <div className="flex-1 min-w-0">
                       <h4 className="font-semibold text-slate-900 text-sm line-clamp-1">{item.product.title}</h4>
@@ -697,7 +700,7 @@ export default function MaktabStartApp() {
       )}
 
       {/* STICKY GLASS NAVBAR WITH LIVE INSTANT SEARCH & USER ACCOUNT */}
-      <header className="sticky top-0 z-40 glass-nav transition-all border-b border-slate-200/80">
+      <header className="sticky top-0 z-40 glass-nav transition-all border-b border-slate-200/80 shadow-sm">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-20 flex items-center justify-between gap-4">
           {/* Brand Logo */}
           <div onClick={() => { setActiveTab("home"); setSearchQuery(""); }} className="flex items-center gap-3 cursor-pointer group shrink-0">
@@ -723,7 +726,7 @@ export default function MaktabStartApp() {
                 value={searchQuery}
                 onChange={handleSearchInput}
                 placeholder="Ruchka, daftar, ryukzak, 1-sinf deb yozing..."
-                className="w-full bg-slate-100/90 hover:bg-slate-100 focus:bg-white border border-transparent focus:border-blue-500 rounded-2xl pl-10 pr-10 py-2.5 text-xs sm:text-sm text-slate-800 outline-none font-medium transition-all shadow-inner"
+                className="w-full bg-slate-100/90 hover:bg-slate-100 focus:bg-white border border-slate-200/60 focus:border-blue-500 rounded-2xl pl-10 pr-10 py-2.5 text-xs sm:text-sm text-slate-800 outline-none font-medium transition-all shadow-inner"
               />
               {searchQuery && (
                 <button onClick={() => setSearchQuery("")} className="absolute right-3 text-slate-400 hover:text-slate-600">
@@ -758,29 +761,27 @@ export default function MaktabStartApp() {
             ))}
           </div>
 
-          {/* User Account & Actions */}
+          {/* User Account & Actions (WITH MIRJALOL'S PHOTO PILL!) */}
           <div className="flex items-center gap-2.5 shrink-0">
             {/* Purpose Help Button */}
             <button
               onClick={() => setShowPurposeModal(true)}
-              className="w-9 h-9 rounded-xl bg-blue-50 hover:bg-blue-100 text-blue-600 flex items-center justify-center transition-colors font-bold text-xs"
-              title="Sayt maqsadi"
+              className="w-9 h-9 rounded-xl bg-blue-50 hover:bg-blue-100 text-blue-600 flex items-center justify-center transition-colors font-bold text-xs shadow-sm"
+              title="Sayt maqsadi va afzalligi"
             >
               <Info className="w-4 h-4" />
             </button>
 
-            {/* Login / User Account Pill */}
+            {/* Login / User Account Pill (WITH AVATAR PHOTO) */}
             {user.isLoggedIn ? (
               <button
                 onClick={() => setActiveTab("account")}
-                className={`px-3 py-1.5 rounded-xl border flex items-center gap-2 text-xs font-bold transition-all cursor-pointer ${
-                  activeTab === "account" ? "bg-blue-600 text-white border-blue-600 shadow-sm" : "bg-white border-slate-200 text-slate-800 hover:bg-slate-50"
+                className={`px-2.5 py-1.5 rounded-2xl border flex items-center gap-2 text-xs font-bold transition-all cursor-pointer shadow-sm ${
+                  activeTab === "account" ? "bg-blue-600 text-white border-blue-600 shadow-md" : "bg-white border-slate-200 text-slate-800 hover:bg-slate-50"
                 }`}
               >
-                <div className="w-6 h-6 rounded-lg bg-emerald-500 text-white flex items-center justify-center text-[10px]">
-                  ✓
-                </div>
-                <span className="max-w-[80px] truncate">{user.name}</span>
+                <img src={user.avatar} alt="User Avatar" className="w-6 h-6 rounded-full object-cover border border-slate-200 shadow-inner" />
+                <span className="max-w-[100px] truncate font-extrabold">{user.name.split(" ")[0]}</span>
               </button>
             ) : (
               <button
@@ -798,7 +799,7 @@ export default function MaktabStartApp() {
             >
               <Heart className="w-4 h-4 text-rose-500 fill-rose-500/20" />
               {wishlist.length > 0 && (
-                <span className="absolute -top-1 -right-1 w-4 h-4 bg-rose-500 text-white rounded-full text-[10px] font-bold flex items-center justify-center">
+                <span className="absolute -top-1 -right-1 w-4 h-4 bg-rose-500 text-white rounded-full text-[10px] font-bold flex items-center justify-center shadow-sm">
                   {wishlist.length}
                 </span>
               )}
@@ -810,7 +811,7 @@ export default function MaktabStartApp() {
             >
               <ShoppingCart className="w-4 h-4" />
               <span className="hidden sm:inline">Savat</span>
-              <span className="bg-white text-blue-600 font-extrabold text-[11px] px-1.5 py-0.5 rounded-full">
+              <span className="bg-white text-blue-600 font-extrabold text-[11px] px-1.5 py-0.5 rounded-full shadow-inner">
                 {cartTotalItems}
               </span>
             </button>
@@ -849,15 +850,15 @@ export default function MaktabStartApp() {
       <main className="flex-1 relative z-10">
         
         {/* ========================================================================= */}
-        {/* TAB 1: HOME & GRADE ASSISTANT (WITH NEW CUSTOM USER HERO) */}
+        {/* TAB 1: HOME & GRADE ASSISTANT (WITH NEW USER HERO WITH MIRJALOL'S PHOTO) */}
         {/* ========================================================================= */}
         {activeTab === "home" && (
           <div className="animate-fade-in">
-            {/* NEW UPGRADED HERO SECTION WITH CUSTOM STUDENT AVATAR / DESIGN */}
+            {/* NEW UPGRADED HERO SECTION WITH USER PHOTO / DESIGN */}
             <section className="relative overflow-hidden pt-10 pb-20 md:pt-16 md:pb-28">
               <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
                 
-                {/* User Greeting & Purpose Intro Banner */}
+                {/* User Greeting & Purpose Intro Banner (WITH MIRJALOL'S PHOTO IN HERO!) */}
                 <div className="bg-gradient-to-r from-blue-900 via-indigo-900 to-slate-900 text-white rounded-3xl p-6 sm:p-8 shadow-2xl mb-12 border border-blue-500/30 flex flex-col md:flex-row items-center justify-between gap-6 relative overflow-hidden">
                   <div className="absolute top-0 right-0 w-64 h-64 bg-blue-500/20 rounded-full blur-3xl pointer-events-none" />
                   
@@ -865,31 +866,29 @@ export default function MaktabStartApp() {
                     <div className="inline-flex items-center gap-2 bg-blue-500/30 text-blue-300 border border-blue-400/30 px-3 py-1 rounded-full text-xs font-bold uppercase tracking-wider">
                       <span>✨ O'zbekistonda #1 Maktab Buyumlari Bozori</span>
                     </div>
-                    <h1 className="text-2xl sm:text-4xl font-extrabold tracking-tight leading-tight">
-                      {user.isLoggedIn ? `Assalomu alaykum, ${user.name}!` : "Assalomu alaykum, Hurmatli Ota-ona va O'quvchilar!"}
+                    <h1 className="text-2xl sm:text-4xl font-extrabold tracking-tight leading-tight flex items-center gap-3">
+                      <span>{user.isLoggedIn ? `Assalomu alaykum, ${user.name}!` : "Assalomu alaykum, Hurmatli Ota-ona va O'quvchilar!"}</span>
                     </h1>
                     <p className="text-slate-300 text-sm sm:text-base font-medium leading-relaxed">
                       MaktabStart'ga xush kelibsiz! Bizning maqsadimiz — farzandingizni 1–7 sinfgacha tayyorlashda bozorlarda soatlab sarson bo'lishingizning oldini olish. O'qituvchilar tomonidan tasdiqlangan eng sifatli daftarlar, qalamlar va ryukzaklarni 1 klik bilan arzon narxda uyga buyurtma bering!
                     </p>
                   </div>
 
-                  {/* Hero Student Custom Visual Avatar Card */}
+                  {/* Hero User Custom Photo Card */}
                   <div className="bg-white/10 backdrop-blur-md border border-white/20 p-5 rounded-2xl text-center shrink-0 w-full md:w-64 space-y-3 shadow-lg">
-                    <div className="w-16 h-16 rounded-2xl bg-gradient-to-tr from-amber-400 via-orange-500 to-rose-500 text-white flex items-center justify-center text-3xl mx-auto shadow-md">
-                      👨‍🎓
+                    <div className="w-20 h-20 rounded-2xl overflow-hidden mx-auto shadow-md border-2 border-white/40">
+                      <img src={user.avatar} alt="Mirjalol Photo" className="w-full h-full object-cover" />
                     </div>
                     <div>
-                      <h4 className="font-bold text-white text-sm">2026 Yangi O'quv Mavsumi</h4>
-                      <span className="text-xs text-blue-200 block font-medium">Sifatli va Ortopedik qurollar</span>
+                      <h4 className="font-bold text-white text-sm">{user.name}</h4>
+                      <span className="text-xs text-emerald-400 block font-bold">● Akkaunt tasdiqlangan</span>
                     </div>
                     <button
-                      onClick={() => {
-                        const el = document.getElementById("grade-assistant-section");
-                        el?.scrollIntoView({ behavior: "smooth" });
-                      }}
-                      className="w-full py-2.5 rounded-xl bg-white text-slate-900 font-extrabold text-xs hover:bg-blue-50 transition-colors shadow"
+                      onClick={() => setActiveTab("account")}
+                      className="w-full py-2.5 rounded-xl bg-white text-slate-900 font-extrabold text-xs hover:bg-blue-50 transition-colors shadow flex items-center justify-center gap-1.5"
                     >
-                      Sinfni Tanlash 🎯
+                      <span>Kabinetga o'tish</span>
+                      <ArrowRight className="w-3.5 h-3.5" />
                     </button>
                   </div>
                 </div>
@@ -923,7 +922,7 @@ export default function MaktabStartApp() {
                       onClick={() => setActiveTab("catalog")}
                       className="w-full sm:w-auto px-8 py-4 rounded-2xl bg-white/90 hover:bg-white text-slate-900 font-bold text-base border border-slate-300 shadow-sm flex items-center justify-center gap-2 transition-all cursor-pointer"
                     >
-                      <span>🛍️ 20+ Mahsulotlar Katalogi</span>
+                      <span>🛍️ 16+ Mahsulotlar (Rasmlar bilan)</span>
                     </button>
                   </div>
                 </div>
@@ -1115,7 +1114,7 @@ export default function MaktabStartApp() {
         )}
 
         {/* ========================================================================= */}
-        {/* TAB 2: CATALOG & FILTERS (WITH ROW-BY-ROW AND GRID TOGGLE) */}
+        {/* TAB 2: CATALOG & FILTERS (WITH ROW-BY-ROW AND REAL PHOTOS) */}
         {/* ========================================================================= */}
         {activeTab === "catalog" && (
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10 animate-fade-in">
@@ -1229,7 +1228,7 @@ export default function MaktabStartApp() {
                     </button>
                   </div>
                 ) : viewMode === "list" ? (
-                  /* ROW-BY-ROW LIST VIEW (AS REQUESTED BY USER) */
+                  /* ROW-BY-ROW LIST VIEW WITH REAL HIGH-RES PHOTOS */
                   <div className="space-y-4">
                     {filteredProducts.map((prod) => (
                       <div
@@ -1237,9 +1236,9 @@ export default function MaktabStartApp() {
                         className="bg-white/95 backdrop-blur-md rounded-2xl p-4 sm:p-5 border border-slate-200/80 shadow-soft hover:shadow-hover transition-all flex flex-col sm:flex-row items-center justify-between gap-6 group"
                       >
                         <div className="flex items-center gap-4 w-full sm:w-auto">
-                          <div className="w-20 h-20 sm:w-24 sm:h-24 rounded-2xl bg-slate-50 flex items-center justify-center text-4xl border border-slate-100 shrink-0 group-hover:scale-105 transition-transform shadow-sm relative">
-                            <span>{prod.imageText.split(" ")[0]}</span>
-                            {prod.badge && <span className={`absolute -top-2 -left-2 text-white text-[10px] font-extrabold px-2 py-0.5 rounded-full shadow-sm ${prod.badgeColor}`}>{prod.badge}</span>}
+                          <div className="w-24 h-24 sm:w-28 sm:h-28 rounded-2xl bg-slate-50 overflow-hidden border border-slate-200 shrink-0 shadow-sm relative">
+                            <img src={prod.image} alt={prod.title} className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500" />
+                            {prod.badge && <span className={`absolute top-2 left-2 text-white text-[10px] font-extrabold px-2 py-0.5 rounded-full shadow-sm ${prod.badgeColor}`}>{prod.badge}</span>}
                           </div>
                           <div className="space-y-1 min-w-0">
                             <div className="flex items-center gap-2">
@@ -1247,7 +1246,7 @@ export default function MaktabStartApp() {
                               <span className="text-xs text-slate-400 font-medium">Sinflar: {prod.grade.join(", ")}-sinf</span>
                             </div>
                             <h3 className="font-extrabold text-slate-900 text-base sm:text-lg group-hover:text-blue-600 transition-colors line-clamp-1">{prod.title}</h3>
-                            <p className="text-xs text-slate-500 line-clamp-1 font-medium">{prod.description}</p>
+                            <p className="text-xs text-slate-500 line-clamp-2 font-medium max-w-md">{prod.description}</p>
                             <div className="flex items-center gap-1 text-amber-500 font-extrabold text-xs pt-1">
                               <Star className="w-3.5 h-3.5 fill-current" />
                               <span>{prod.rating}</span>
@@ -1278,12 +1277,12 @@ export default function MaktabStartApp() {
                     ))}
                   </div>
                 ) : (
-                  /* GRID VIEW */
+                  /* GRID VIEW WITH REAL HIGH-RES PHOTOS */
                   <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
                     {filteredProducts.map((prod) => (
                       <div key={prod.id} className="group bg-white/95 backdrop-blur-md rounded-2xl p-4 border border-slate-200/80 shadow-soft hover:shadow-hover transition-all duration-300 flex flex-col justify-between relative">
-                        <div className="relative aspect-square w-full rounded-xl bg-slate-50 flex items-center justify-center text-3xl font-bold text-slate-500 overflow-hidden mb-4 border border-slate-100">
-                          <span className="group-hover:scale-110 transition-transform duration-500">{prod.imageText}</span>
+                        <div className="relative aspect-square w-full rounded-xl bg-slate-50 overflow-hidden mb-4 border border-slate-200 shadow-inner">
+                          <img src={prod.image} alt={prod.title} className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500" />
                           {prod.badge && <span className={`absolute top-3 left-3 text-white text-[11px] font-extrabold px-2.5 py-1 rounded-full shadow-sm ${prod.badgeColor}`}>{prod.badge}</span>}
                           <button onClick={() => toggleWishlist(prod.id)} className="absolute top-3 right-3 w-8 h-8 rounded-full bg-white/90 backdrop-blur text-slate-600 hover:text-rose-500 flex items-center justify-center shadow-sm transition-colors">
                             <Heart className={`w-4 h-4 ${wishlist.includes(prod.id) ? "text-rose-500 fill-rose-500" : ""}`} />
@@ -1444,18 +1443,18 @@ export default function MaktabStartApp() {
         )}
 
         {/* ========================================================================= */}
-        {/* TAB 5: USER ACCOUNT / KABINET */}
+        {/* TAB 5: USER ACCOUNT / KABINET (WITH MIRJALOL's GITHUB PHOTO!) */}
         {/* ========================================================================= */}
         {activeTab === "account" && (
           <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-12 animate-fade-in">
             <div className="bg-white/95 backdrop-blur-md rounded-3xl p-8 border border-slate-200 shadow-xl space-y-8">
               <div className="flex flex-col sm:flex-row items-center justify-between gap-6 border-b pb-6">
                 <div className="flex items-center gap-4">
-                  <div className="w-20 h-20 rounded-2xl bg-gradient-to-tr from-blue-600 to-indigo-600 text-white flex items-center justify-center text-3xl font-extrabold shadow-lg">
-                    {user.role === "Ota-ona" ? "👨‍👩‍👦" : user.role === "O'quvchi" ? "🎒" : "👩‍🏫"}
+                  <div className="w-24 h-24 rounded-2xl overflow-hidden shadow-lg border-2 border-blue-500 shrink-0">
+                    <img src={user.avatar} alt="Mirjalol Profile" className="w-full h-full object-cover" />
                   </div>
                   <div>
-                    <span className="bg-blue-50 text-blue-700 font-bold text-xs px-2.5 py-0.5 rounded-full uppercase">{user.role}</span>
+                    <span className="bg-blue-50 text-blue-700 font-bold text-xs px-2.5 py-0.5 rounded-full uppercase">{user.role} • Tasdiqlangan</span>
                     <h2 className="text-2xl font-extrabold text-slate-900 mt-1">{user.name}</h2>
                     <span className="text-sm text-slate-500 font-semibold">{user.phone}</span>
                   </div>
