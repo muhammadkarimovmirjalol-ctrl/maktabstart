@@ -128,7 +128,10 @@ export default function MaktabStartApp() {
     isLoggedIn: true, // Logged in by default so the user immediately sees THEIR photo!
   });
   const [isLoginModalOpen, setIsLoginModalOpen] = useState(false);
+  
+  // THREE SEPARATE FIELDS AS REQUESTED: Telefon Raqami, Login (with @gmail auto), Parol
   const [loginPhone, setLoginPhone] = useState("+998 ");
+  const [loginUsername, setLoginUsername] = useState("mirjalol_2026@gmail.com");
   const [loginPass, setLoginPass] = useState("");
   const [loginRole, setLoginRole] = useState<"Ota-ona" | "O'quvchi" | "O'qituvchi">("Ota-ona");
   const [showPassword, setShowPassword] = useState(false);
@@ -238,15 +241,17 @@ export default function MaktabStartApp() {
 
   const handleLogin = (e: React.FormEvent) => {
     e.preventDefault();
+    // Automatically append @gmail.com if not present
+    const finalLogin = loginUsername.includes("@") ? loginUsername : `${loginUsername}@gmail.com`;
     setUser({
-      name: loginPhone.length > 6 ? `Mirjalol (${loginPhone.slice(-4)})` : "Mirjalol Muhammadkarimov",
+      name: finalLogin ? `Mirjalol (${finalLogin})` : "Mirjalol Muhammadkarimov",
       phone: loginPhone,
       role: loginRole,
       avatar: "https://github.com/muhammadkarimovmirjalol-ctrl.png",
       isLoggedIn: true,
     });
     setIsLoginModalOpen(false);
-    showToast(`🎉 Xush kelibsiz, ${loginRole}! Kabinetga muvaffaqiyatli kirdingiz.`);
+    showToast(`🎉 Xush kelibsiz! Akkauntga kirildi (${finalLogin}).`);
   };
 
   const handleLogout = () => {
@@ -387,7 +392,7 @@ export default function MaktabStartApp() {
         </div>
       )}
 
-      {/* LOGIN / ACCOUNT AUTHENTICATION MODAL */}
+      {/* LOGIN / ACCOUNT AUTHENTICATION MODAL (UPDATED WITH AUTO @GMAIL.COM SUFFIX!) */}
       {isLoginModalOpen && (
         <div className="fixed inset-0 z-50 bg-slate-900/70 backdrop-blur-md flex items-center justify-center p-4 animate-fade-in">
           <div className="bg-white rounded-3xl max-w-md w-full p-6 sm:p-8 shadow-2xl border border-slate-200 space-y-6">
@@ -425,7 +430,7 @@ export default function MaktabStartApp() {
               </div>
 
               <div>
-                <label className="text-xs font-bold text-slate-600 uppercase block mb-1">Telefon Raqam yoki Login</label>
+                <label className="text-xs font-bold text-slate-600 uppercase block mb-1">Telefon Raqami</label>
                 <div className="relative">
                   <input
                     type="text"
@@ -440,7 +445,23 @@ export default function MaktabStartApp() {
               </div>
 
               <div>
-                <label className="text-xs font-bold text-slate-600 uppercase block mb-1">Parol (Yoki yangi parol o'ylab toping)</label>
+                <label className="text-xs font-bold text-slate-600 uppercase block mb-1">Login / Email (@gmail.com avtomatik qo'shiladi)</label>
+                <div className="relative">
+                  <input
+                    type="text"
+                    required
+                    value={loginUsername}
+                    onChange={(e) => setLoginUsername(e.target.value)}
+                    placeholder="foydalanuvchi_nomi@gmail.com"
+                    className="w-full bg-slate-50 border border-slate-200 rounded-xl pl-10 pr-4 py-3 text-sm font-semibold outline-none focus:border-blue-500"
+                  />
+                  <User className="w-4 h-4 text-slate-400 absolute left-3.5 top-3.5" />
+                </div>
+                <span className="text-[11px] text-blue-600 font-bold mt-1 block">💡 Yozgan nomingiz oxiriga @gmail.com o'zi qo'shib beriladi!</span>
+              </div>
+
+              <div>
+                <label className="text-xs font-bold text-slate-600 uppercase block mb-1">Parol</label>
                 <div className="relative">
                   <input
                     type={showPassword ? "text" : "password"}
