@@ -1941,65 +1941,288 @@ export default function MaktabStartApp() {
         )}
 
         {/* ========================================================================= */}
-        {/* TAB 6: USER ACCOUNT / KABINET */}
+        {/* TAB 6: USER ACCOUNT / KABINET (PREMIUM STRIPE / APPLE / LINEAR REDESIGN) */}
         {/* ========================================================================= */}
         {activeTab === "account" && (
-          <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-12 animate-fade-in">
-            <div className="bg-white/95 backdrop-blur-md rounded-3xl p-8 border border-slate-200 shadow-xl space-y-8">
-              <div className="flex flex-col sm:flex-row items-center justify-between gap-6 border-b pb-6">
-                <div className="flex items-center gap-4">
-                  <div className="w-24 h-24 rounded-2xl overflow-hidden shadow-lg border-2 border-blue-500 shrink-0">
-                    <img src={user.avatar} alt="Mirjalol Profile" className="w-full h-full object-cover" />
-                  </div>
-                  <div>
-                    <span className="bg-blue-50 text-blue-700 font-bold text-xs px-2.5 py-0.5 rounded-full uppercase">{user.role} • Tasdiqlangan</span>
-                    <h2 className="text-2xl font-extrabold text-slate-900 mt-1">{user.name}</h2>
-                    <span className="text-sm text-slate-500 font-semibold">{user.phone}</span>
-                  </div>
-                </div>
-                <button
-                  onClick={handleLogout}
-                  className="px-5 py-2.5 rounded-xl bg-rose-50 hover:bg-rose-100 text-rose-600 font-bold text-xs flex items-center gap-2 transition-colors cursor-pointer"
-                >
-                  <LogOut className="w-4 h-4" />
-                  <span>Tizimdan chiqish</span>
-                </button>
-              </div>
+          <div className="min-h-screen bg-slate-100/80 dark:bg-slate-950 py-12 px-4 sm:px-6 lg:px-8 transition-colors duration-300">
+            <div className="max-w-5xl mx-auto space-y-10 animate-fade-in">
+              
+              {/* 1. PROFILE HEADER CARD */}
+              <div className="bg-white dark:bg-slate-900 rounded-3xl p-6 sm:p-8 border border-slate-200/80 dark:border-slate-800 shadow-xl shadow-slate-900/5 dark:shadow-none transition-all">
+                <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-6">
+                  
+                  {/* Real Avatar + Dominant Name + Verified Pill Badge */}
+                  <div className="flex items-center gap-5">
+                    <div className="relative shrink-0">
+                      <div className="w-24 h-24 sm:w-28 sm:h-28 rounded-full overflow-hidden ring-4 ring-indigo-500/20 dark:ring-indigo-400/20 shadow-lg bg-gradient-to-br from-indigo-500 to-blue-600 flex items-center justify-center text-white font-extrabold text-2xl">
+                        {user.avatar ? (
+                          <img src={user.avatar} alt={user.name} className="w-full h-full object-cover" />
+                        ) : (
+                          <span>{user.name.split(" ").map(n => n[0]).slice(0, 2).join("")}</span>
+                        )}
+                      </div>
+                      <span className="absolute bottom-1 right-1 w-5 h-5 bg-emerald-500 border-2 border-white dark:border-slate-900 rounded-full flex items-center justify-center shadow-sm" title="Faol foydalanuvchi">
+                        <Check className="w-3 h-3 text-white stroke-[3]" />
+                      </span>
+                    </div>
 
-              <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
-                <div className="p-5 rounded-2xl bg-slate-50 border border-slate-200/80 text-center space-y-1">
-                  <ShoppingBag className="w-6 h-6 text-blue-600 mx-auto mb-2" />
-                  <span className="text-2xl font-extrabold text-slate-900">2 ta</span>
-                  <span className="text-xs text-slate-500 font-bold block">Faol buyurtmalar</span>
-                </div>
-                <div className="p-5 rounded-2xl bg-slate-50 border border-slate-200/80 text-center space-y-1 cursor-pointer hover:bg-slate-100 transition-colors" onClick={() => setIsWishlistOpen(true)}>
-                  <Heart className="w-6 h-6 text-rose-500 mx-auto mb-2" />
-                  <span className="text-2xl font-extrabold text-slate-900">{wishlist.length} ta</span>
-                  <span className="text-xs text-slate-500 font-bold block">Sevimli mahsulotlar (ko'rish)</span>
-                </div>
-                <div className="p-5 rounded-2xl bg-slate-50 border border-slate-200/80 text-center space-y-1">
-                  <Award className="w-6 h-6 text-amber-500 mx-auto mb-2" />
-                  <span className="text-2xl font-extrabold text-slate-900">150 Ball</span>
-                  <span className="text-xs text-slate-500 font-bold block">Bonus ballaringiz</span>
-                </div>
-              </div>
+                    <div className="space-y-2">
+                      <div className="flex flex-wrap items-center gap-2">
+                        <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-emerald-500/10 border border-emerald-500/20 text-emerald-600 dark:text-emerald-400 font-bold text-xs">
+                          <ShieldCheck className="w-3.5 h-3.5 text-emerald-500 shrink-0" />
+                          <span>{user.role} • tasdiqlangan</span>
+                        </span>
+                        <span className="text-[11px] font-semibold text-slate-400 dark:text-slate-500 bg-slate-100 dark:bg-slate-800 px-2.5 py-0.5 rounded-full">
+                          ID: #MK-2026
+                        </span>
+                      </div>
 
-              <div>
-                <h3 className="font-extrabold text-lg text-slate-900 mb-4">So'nggi buyurtmalar tarixi:</h3>
-                <div className="p-4 rounded-2xl border border-slate-200 bg-slate-50 flex items-center justify-between text-sm">
-                  <div className="flex items-center gap-3">
-                    <span className="w-2.5 h-2.5 rounded-full bg-emerald-500" />
-                    <div>
-                      <h4 className="font-bold text-slate-900">Buyurtma #M-2026-001</h4>
-                      <span className="text-xs text-slate-500">1-Sinf Boshlang'ich to'plami (54 ta buyum)</span>
+                      <h1 className="text-2xl sm:text-3xl font-extrabold text-slate-900 dark:text-white tracking-tight leading-none">
+                        {user.name}
+                      </h1>
+
+                      <div className="flex items-center gap-2 text-sm text-slate-500 dark:text-slate-400 font-medium">
+                        <Phone className="w-4 h-4 text-slate-400 dark:text-slate-500 shrink-0" />
+                        <span>{user.phone}</span>
+                      </div>
                     </div>
                   </div>
-                  <div className="text-right">
-                    <span className="font-extrabold text-blue-600">245,000 so'm</span>
-                    <span className="text-xs text-emerald-600 font-bold block">Kuryer yo'lda 🚚</span>
-                  </div>
+
+                  {/* Secondary Quiet Ghost Logout Button */}
+                  <button
+                    onClick={handleLogout}
+                    className="w-full sm:w-auto px-5 py-2.5 rounded-xl border border-slate-300 dark:border-slate-700 hover:border-rose-300 dark:hover:border-rose-800 hover:bg-rose-50 dark:hover:bg-rose-950/40 text-slate-700 dark:text-slate-300 hover:text-rose-600 dark:hover:text-rose-400 font-bold text-xs flex items-center justify-center gap-2 transition-all duration-200 cursor-pointer shadow-sm shrink-0"
+                  >
+                    <LogOut className="w-4 h-4" />
+                    <span>Tizimdan chiqish</span>
+                  </button>
                 </div>
               </div>
+
+              {/* 2. STATS ROW (3 DISTINCT HIERARCHICAL CARDS WITH STAGGER & HOVER LIFT) */}
+              <div className="grid grid-cols-1 sm:grid-cols-3 gap-5">
+                
+                {/* Card 1: Active Orders (Indigo Wash) */}
+                <div className="bg-gradient-to-br from-indigo-50/90 via-blue-50/40 to-white dark:from-indigo-950/40 dark:via-slate-900 dark:to-slate-900 rounded-3xl p-6 border border-indigo-200/60 dark:border-indigo-800/50 shadow-md shadow-indigo-500/5 hover:-translate-y-1 hover:shadow-xl transition-all duration-200 ease-out flex flex-col justify-between">
+                  <div className="flex items-center justify-between mb-4">
+                    <span className="text-xs font-extrabold uppercase tracking-wider text-indigo-700 dark:text-indigo-300">
+                      Faol buyurtmalar
+                    </span>
+                    <div className="w-11 h-11 rounded-2xl bg-indigo-600 text-white flex items-center justify-center shadow-md shadow-indigo-500/25">
+                      <ShoppingBag className="w-5 h-5" />
+                    </div>
+                  </div>
+                  <div>
+                    <span className="text-3xl sm:text-4xl font-extrabold tracking-tight text-slate-900 dark:text-white block">
+                      2 ta
+                    </span>
+                    <span className="text-xs text-indigo-600/80 dark:text-indigo-400 font-semibold mt-1 block">
+                      Yetkazish jarayonida 🚚
+                    </span>
+                  </div>
+                </div>
+
+                {/* Card 2: Saved Wishlist Items (Rose Wash - Clickable) */}
+                <div
+                  onClick={() => setIsWishlistOpen(true)}
+                  className="bg-gradient-to-br from-rose-50/90 via-pink-50/40 to-white dark:from-rose-950/40 dark:via-slate-900 dark:to-slate-900 rounded-3xl p-6 border border-rose-200/60 dark:border-rose-800/50 shadow-md shadow-rose-500/5 hover:-translate-y-1 hover:shadow-xl transition-all duration-200 ease-out cursor-pointer group flex flex-col justify-between"
+                >
+                  <div className="flex items-center justify-between mb-4">
+                    <span className="text-xs font-extrabold uppercase tracking-wider text-rose-700 dark:text-rose-300">
+                      Sevimli mahsulotlar
+                    </span>
+                    <div className="w-11 h-11 rounded-2xl bg-rose-500 text-white flex items-center justify-center shadow-md shadow-rose-500/25 group-hover:scale-105 transition-transform">
+                      <Heart className="w-5 h-5 fill-white" />
+                    </div>
+                  </div>
+                  <div>
+                    <span className="text-3xl sm:text-4xl font-extrabold tracking-tight text-slate-900 dark:text-white block">
+                      {wishlist.length} ta
+                    </span>
+                    <span className="text-xs text-rose-600/80 dark:text-rose-400 font-semibold mt-1 flex items-center gap-1">
+                      <span>Ro'yxatni ochish</span>
+                      <ArrowRight className="w-3 h-3 group-hover:translate-x-0.5 transition-transform" />
+                    </span>
+                  </div>
+                </div>
+
+                {/* Card 3: Bonus Ballar (HIGHLIGHTED MOST VALUABLE ACTION - Amber/Gold Accent) */}
+                <div className="bg-gradient-to-br from-amber-50/95 via-orange-50/50 to-white dark:from-amber-950/40 dark:via-slate-900 dark:to-slate-900 rounded-3xl p-6 border-2 border-amber-400/80 dark:border-amber-500/60 shadow-lg shadow-amber-500/10 hover:-translate-y-1 hover:shadow-xl transition-all duration-200 ease-out flex flex-col justify-between relative overflow-hidden">
+                  <div className="absolute top-0 right-0 w-28 h-28 bg-amber-400/10 rounded-full blur-2xl pointer-events-none" />
+                  <div className="flex items-center justify-between mb-4 relative z-10">
+                    <div className="flex items-center gap-1.5">
+                      <span className="text-xs font-extrabold uppercase tracking-wider text-amber-700 dark:text-amber-300">
+                        Bonus ballaringiz
+                      </span>
+                      <span className="bg-amber-500 text-white text-[10px] font-extrabold px-2 py-0.5 rounded-full shadow-sm">
+                        VIP ✨
+                      </span>
+                    </div>
+                    <div className="w-11 h-11 rounded-2xl bg-gradient-to-br from-amber-500 to-orange-500 text-white flex items-center justify-center shadow-md shadow-amber-500/30">
+                      <Award className="w-5 h-5" />
+                    </div>
+                  </div>
+                  <div className="relative z-10">
+                    <span className="text-3xl sm:text-4xl font-extrabold tracking-tight text-amber-600 dark:text-amber-400 block">
+                      150 Ball
+                    </span>
+                    <span className="text-xs text-amber-700/80 dark:text-amber-300 font-semibold mt-1 block">
+                      Keyingi xaridda 15,000 so'm chegirma
+                    </span>
+                  </div>
+                </div>
+
+              </div>
+
+              {/* 3. ORDER HISTORY SECTION (STRUCTURED ELEVATED CARDS WITH STATUS PILLS) */}
+              <div className="space-y-5">
+                <div className="flex items-center justify-between">
+                  <div>
+                    <h3 className="text-xl font-extrabold text-slate-900 dark:text-white tracking-tight">
+                      So'nggi buyurtmalar tarixi
+                    </h3>
+                    <p className="text-xs text-slate-500 dark:text-slate-400 font-medium mt-0.5">
+                      Barcha amaldagi va yakunlangan buyurtmalar haqida ma'lumot
+                    </p>
+                  </div>
+                  <span className="text-xs font-bold text-slate-400 dark:text-slate-500 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 px-3 py-1.5 rounded-xl">
+                    Jami: 3 ta buyurtma
+                  </span>
+                </div>
+
+                <div className="space-y-3.5">
+                  {/* Order Card 1 (Active / In Transit) */}
+                  <div
+                    onClick={() => showToast("📦 Buyurtma #M-2026-001: Kuryer Toshkent shahar bo'yicha yo'lga chiqdi.")}
+                    className="bg-white dark:bg-slate-900 rounded-2xl p-5 border border-slate-200/80 dark:border-slate-800 shadow-soft hover:border-indigo-400/60 dark:hover:border-indigo-600 hover:shadow-xl transition-all duration-200 ease-out cursor-pointer group flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4"
+                  >
+                    <div className="flex items-center gap-4">
+                      <div className="w-13 h-13 sm:w-14 sm:h-14 rounded-2xl bg-gradient-to-br from-indigo-500 to-blue-600 text-white flex items-center justify-center shadow-md shadow-indigo-500/20 shrink-0 font-bold">
+                        <Truck className="w-6 h-6" />
+                      </div>
+                      <div className="space-y-1">
+                        <div className="flex items-center gap-2">
+                          <span className="text-xs font-bold text-slate-400 dark:text-slate-500">
+                            #M-2026-001 • 14-Iyul, 2026
+                          </span>
+                          <span className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full bg-emerald-500/10 border border-emerald-500/20 text-emerald-600 dark:text-emerald-400 font-bold text-xs">
+                            <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
+                            <span>Kuryer yo'lda 🚚</span>
+                          </span>
+                        </div>
+                        <h4 className="font-extrabold text-slate-900 dark:text-white text-base group-hover:text-indigo-600 dark:group-hover:text-indigo-400 transition-colors">
+                          1-Sinf Boshlang'ich to'plami (54 ta buyum)
+                        </h4>
+                        <span className="text-xs text-slate-500 dark:text-slate-400 font-medium block">
+                          To'lov: Naqd kuryerga qabul qilinganda (COD)
+                        </span>
+                      </div>
+                    </div>
+
+                    <div className="flex items-center justify-between sm:justify-end w-full sm:w-auto border-t sm:border-0 pt-3 sm:pt-0 border-slate-100 dark:border-slate-800 gap-4">
+                      <div className="text-left sm:text-right">
+                        <span className="text-[11px] text-slate-400 font-semibold block uppercase tracking-wider">
+                          Jami summasi
+                        </span>
+                        <span className="text-lg font-extrabold tracking-tight text-slate-900 dark:text-white">
+                          245,000 <span className="text-xs font-normal text-slate-500">so'm</span>
+                        </span>
+                      </div>
+                      <div className="w-9 h-9 rounded-xl bg-slate-100 dark:bg-slate-800 group-hover:bg-indigo-600 group-hover:text-white text-slate-400 flex items-center justify-center transition-all">
+                        <ChevronRight className="w-4 h-4" />
+                      </div>
+                    </div>
+                  </div>
+
+                  {/* Order Card 2 (Delivered) */}
+                  <div
+                    onClick={() => showToast("✅ Buyurtma #M-2026-002 allaqachon muvaffaqiyatli yetkazilgan.")}
+                    className="bg-white dark:bg-slate-900 rounded-2xl p-5 border border-slate-200/80 dark:border-slate-800 shadow-soft hover:border-indigo-400/60 dark:hover:border-indigo-600 hover:shadow-xl transition-all duration-200 ease-out cursor-pointer group flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4"
+                  >
+                    <div className="flex items-center gap-4">
+                      <div className="w-13 h-13 sm:w-14 sm:h-14 rounded-2xl bg-gradient-to-br from-emerald-500 to-teal-600 text-white flex items-center justify-center shadow-md shadow-emerald-500/20 shrink-0 font-bold">
+                        <CheckSquare className="w-6 h-6" />
+                      </div>
+                      <div className="space-y-1">
+                        <div className="flex items-center gap-2">
+                          <span className="text-xs font-bold text-slate-400 dark:text-slate-500">
+                            #M-2026-002 • 10-Iyul, 2026
+                          </span>
+                          <span className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300 font-bold text-xs">
+                            <Check className="w-3 h-3 text-emerald-500 stroke-[3]" />
+                            <span>Yetkazilgan ✅</span>
+                          </span>
+                        </div>
+                        <h4 className="font-extrabold text-slate-900 dark:text-white text-base group-hover:text-indigo-600 dark:group-hover:text-indigo-400 transition-colors">
+                          48-Varaqli daftarlar to'plami va ortopedik ryukzak
+                        </h4>
+                        <span className="text-xs text-slate-500 dark:text-slate-400 font-medium block">
+                          To'lov: Click orqali to'langan
+                        </span>
+                      </div>
+                    </div>
+
+                    <div className="flex items-center justify-between sm:justify-end w-full sm:w-auto border-t sm:border-0 pt-3 sm:pt-0 border-slate-100 dark:border-slate-800 gap-4">
+                      <div className="text-left sm:text-right">
+                        <span className="text-[11px] text-slate-400 font-semibold block uppercase tracking-wider">
+                          Jami summasi
+                        </span>
+                        <span className="text-lg font-extrabold tracking-tight text-slate-900 dark:text-white">
+                          155,000 <span className="text-xs font-normal text-slate-500">so'm</span>
+                        </span>
+                      </div>
+                      <div className="w-9 h-9 rounded-xl bg-slate-100 dark:bg-slate-800 group-hover:bg-indigo-600 group-hover:text-white text-slate-400 flex items-center justify-center transition-all">
+                        <ChevronRight className="w-4 h-4" />
+                      </div>
+                    </div>
+                  </div>
+
+                  {/* Order Card 3 (Delivered) */}
+                  <div
+                    onClick={() => showToast("✅ Buyurtma #M-2026-003 allaqachon muvaffaqiyatli yetkazilgan.")}
+                    className="bg-white dark:bg-slate-900 rounded-2xl p-5 border border-slate-200/80 dark:border-slate-800 shadow-soft hover:border-indigo-400/60 dark:hover:border-indigo-600 hover:shadow-xl transition-all duration-200 ease-out cursor-pointer group flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4"
+                  >
+                    <div className="flex items-center gap-4">
+                      <div className="w-13 h-13 sm:w-14 sm:h-14 rounded-2xl bg-gradient-to-br from-purple-500 to-pink-600 text-white flex items-center justify-center shadow-md shadow-purple-500/20 shrink-0 font-bold">
+                        <PenTool className="w-6 h-6" />
+                      </div>
+                      <div className="space-y-1">
+                        <div className="flex items-center gap-2">
+                          <span className="text-xs font-bold text-slate-400 dark:text-slate-500">
+                            #M-2026-003 • 05-Iyul, 2026
+                          </span>
+                          <span className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300 font-bold text-xs">
+                            <Check className="w-3 h-3 text-emerald-500 stroke-[3]" />
+                            <span>Yetkazilgan ✅</span>
+                          </span>
+                        </div>
+                        <h4 className="font-extrabold text-slate-900 dark:text-white text-base group-hover:text-indigo-600 dark:group-hover:text-indigo-400 transition-colors">
+                          Maped ColorPeps 24-Rangli Qalamlar va Chizmachilik Albomi
+                        </h4>
+                        <span className="text-xs text-slate-500 dark:text-slate-400 font-medium block">
+                          To'lov: Payme orqali to'langan
+                        </span>
+                      </div>
+                    </div>
+
+                    <div className="flex items-center justify-between sm:justify-end w-full sm:w-auto border-t sm:border-0 pt-3 sm:pt-0 border-slate-100 dark:border-slate-800 gap-4">
+                      <div className="text-left sm:text-right">
+                        <span className="text-[11px] text-slate-400 font-semibold block uppercase tracking-wider">
+                          Jami summasi
+                        </span>
+                        <span className="text-lg font-extrabold tracking-tight text-slate-900 dark:text-white">
+                          60,000 <span className="text-xs font-normal text-slate-500">so'm</span>
+                        </span>
+                      </div>
+                      <div className="w-9 h-9 rounded-xl bg-slate-100 dark:bg-slate-800 group-hover:bg-indigo-600 group-hover:text-white text-slate-400 flex items-center justify-center transition-all">
+                        <ChevronRight className="w-4 h-4" />
+                      </div>
+                    </div>
+                  </div>
+
+                </div>
+              </div>
+
             </div>
           </div>
         )}
