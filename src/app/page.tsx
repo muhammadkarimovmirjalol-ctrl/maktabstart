@@ -365,7 +365,7 @@ export default function MaktabStartApp() {
   const [selectedGrade, setSelectedGrade] = useState<number>(5);
   const [bgIndex, setBgIndex] = useState(0);
   
-  // User Authentication State (WITH MIRJALOL's GITHUB PROFILE AVATAR BY DEFAULT!)
+  // User Authentication State
   const [user, setUser] = useState<UserAccount>({
     name: "Mirjalol Muhammadkarimov",
     phone: "+998 90 123 45 67",
@@ -375,9 +375,9 @@ export default function MaktabStartApp() {
   });
   const [isLoginModalOpen, setIsLoginModalOpen] = useState(false);
   
-  // THREE SEPARATE FIELDS AS REQUESTED: Telefon Raqami, Login (with @gmail auto), Parol
-  const [loginPhone, setLoginPhone] = useState("+998 ");
+  // THREE SEPARATE FIELDS AS REQUESTED: Login (with @gmail auto) FIRST at the top, then Phone, then Password
   const [loginUsername, setLoginUsername] = useState("mirjalol_2026@gmail.com");
+  const [loginPhone, setLoginPhone] = useState("+998 ");
   const [loginPass, setLoginPass] = useState("");
   const [loginRole, setLoginRole] = useState<"Ota-ona" | "O'quvchi" | "O'qituvchi">("Ota-ona");
   const [showPassword, setShowPassword] = useState(false);
@@ -392,6 +392,7 @@ export default function MaktabStartApp() {
   ]);
   const [wishlist, setWishlist] = useState<number[]>([1, 3]);
   const [isCartOpen, setIsCartOpen] = useState(false);
+  const [isWishlistOpen, setIsWishlistOpen] = useState(false);
   const [toast, setToast] = useState<string | null>(null);
 
   // Search & Catalog Filter State
@@ -430,12 +431,14 @@ export default function MaktabStartApp() {
     return () => clearInterval(timer);
   }, []);
 
-  // Computed Cart Values
+  // Computed Cart & Wishlist Values
   const cartTotalItems = cart.reduce((sum, item) => sum + item.quantity, 0);
   const cartSubtotal = cart.reduce((sum, item) => sum + item.product.price * item.quantity, 0);
   const discountAmount = Math.round((cartSubtotal * discountPercent) / 100);
   const deliveryCost = cartSubtotal > 300000 || cartSubtotal === 0 ? 0 : 25000;
   const cartFinalTotal = cartSubtotal - discountAmount + deliveryCost;
+
+  const wishlistProducts = PRODUCTS.filter((p) => wishlist.includes(p.id));
 
   // Helpers
   const showToast = (message: string) => {
@@ -556,6 +559,35 @@ export default function MaktabStartApp() {
   return (
     <div className="min-h-screen flex flex-col bg-slate-50 selection:bg-blue-600 selection:text-white relative font-sans">
       
+      {/* TOP LOGIN & ACCOUNT ANNOUNCEMENT BAR ("LOGIN BO'SIN BOSHIGA") */}
+      <div className="bg-gradient-to-r from-slate-900 via-blue-950 to-slate-900 text-white py-2 px-4 border-b border-slate-800 text-xs font-semibold relative z-50">
+        <div className="max-w-7xl mx-auto flex items-center justify-between gap-3">
+          <div className="flex items-center gap-2">
+            <span className="bg-blue-600 text-white font-extrabold px-2 py-0.5 rounded text-[10px] uppercase">BOSH SAHIFA LOGIN</span>
+            <span className="hidden sm:inline text-slate-300">Maktab buyumlariga buyurtma berish va saqlash uchun:</span>
+          </div>
+          <div className="flex items-center gap-3">
+            {user.isLoggedIn ? (
+              <button
+                onClick={() => setActiveTab("account")}
+                className="bg-white/10 hover:bg-white/20 text-blue-300 hover:text-white px-3 py-1 rounded-lg transition-all flex items-center gap-1.5 font-bold cursor-pointer"
+              >
+                <UserCheck className="w-3.5 h-3.5 text-emerald-400" />
+                <span>Akkaunt kabineti: {user.name.split(" ")[0]}</span>
+              </button>
+            ) : (
+              <button
+                onClick={() => setIsLoginModalOpen(true)}
+                className="bg-blue-600 hover:bg-blue-500 text-white px-3.5 py-1 rounded-lg transition-all flex items-center gap-1.5 font-bold cursor-pointer shadow-sm"
+              >
+                <LogIn className="w-3.5 h-3.5" />
+                <span>Tizimga Kirish (Login)</span>
+              </button>
+            )}
+          </div>
+        </div>
+      </div>
+
       {/* 4 HIGH-QUALITY STUDY BACKGROUNDS WITH BLUR OVERLAY */}
       <div className="fixed inset-0 pointer-events-none z-0 overflow-hidden">
         {STUDY_BACKGROUNDS.map((bgUrl, idx) => (
@@ -645,7 +677,7 @@ export default function MaktabStartApp() {
               <button
                 onClick={() => {
                   setShowPurposeModal(false);
-                  if (!user.isLoggedIn) setIsLoginModalOpen(true);
+                  setIsLoginModalOpen(true);
                 }}
                 className="w-full sm:w-auto px-6 py-3 rounded-xl bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 text-white font-extrabold text-sm shadow-md transition-all shrink-0 cursor-pointer"
               >
@@ -656,7 +688,7 @@ export default function MaktabStartApp() {
         </div>
       )}
 
-      {/* LOGIN / ACCOUNT AUTHENTICATION MODAL */}
+      {/* LOGIN / ACCOUNT AUTHENTICATION MODAL ("LOGIN BOSHIDA") */}
       {isLoginModalOpen && (
         <div className="fixed inset-0 z-50 bg-slate-900/70 backdrop-blur-md flex items-center justify-center p-4 animate-fade-in">
           <div className="bg-white rounded-3xl max-w-md w-full p-6 sm:p-8 shadow-2xl border border-slate-200 space-y-6">
@@ -673,43 +705,11 @@ export default function MaktabStartApp() {
             </div>
 
             <form onSubmit={handleLogin} className="space-y-4">
+              {/* FIELD #1 (BOSHIGA): LOGIN / EMAIL WITH AUTO @GMAIL.COM */}
               <div>
-                <label className="text-xs font-bold text-slate-600 uppercase block mb-1">Sizning Rolingiz</label>
-                <div className="grid grid-cols-3 gap-2">
-                  {(["Ota-ona", "O'quvchi", "O'qituvchi"] as const).map((r) => (
-                    <button
-                      key={r}
-                      type="button"
-                      onClick={() => setLoginRole(r)}
-                      className={`py-2.5 px-2 rounded-xl border font-bold text-xs transition-all ${
-                        loginRole === r
-                          ? "bg-blue-600 text-white border-blue-600 shadow-sm"
-                          : "bg-slate-50 border-slate-200 text-slate-700 hover:bg-slate-100"
-                      }`}
-                    >
-                      {r === "Ota-ona" ? "👨‍👩‍👦" : r === "O'quvchi" ? "🎒" : "👩‍🏫"} {r}
-                    </button>
-                  ))}
-                </div>
-              </div>
-
-              <div>
-                <label className="text-xs font-bold text-slate-600 uppercase block mb-1">Telefon Raqami</label>
-                <div className="relative">
-                  <input
-                    type="text"
-                    required
-                    value={loginPhone}
-                    onChange={(e) => setLoginPhone(e.target.value)}
-                    placeholder="+998 (90) 123-45-67"
-                    className="w-full bg-slate-50 border border-slate-200 rounded-xl pl-10 pr-4 py-3 text-sm font-semibold outline-none focus:border-blue-500"
-                  />
-                  <Phone className="w-4 h-4 text-slate-400 absolute left-3.5 top-3.5" />
-                </div>
-              </div>
-
-              <div>
-                <label className="text-xs font-bold text-slate-600 uppercase block mb-1">Login / Email (@gmail.com avtomatik qo'shiladi)</label>
+                <label className="text-xs font-extrabold text-blue-700 uppercase block mb-1">
+                  1. Login / Email (@gmail.com avtomatik qo'shiladi)
+                </label>
                 <div className="relative">
                   <input
                     type="text"
@@ -724,8 +724,25 @@ export default function MaktabStartApp() {
                 <span className="text-[11px] text-blue-600 font-bold mt-1 block">💡 Yozgan nomingiz oxiriga @gmail.com o'zi qo'shib beriladi!</span>
               </div>
 
+              {/* FIELD #2: TELEFON RAQAMI */}
               <div>
-                <label className="text-xs font-bold text-slate-600 uppercase block mb-1">Parol</label>
+                <label className="text-xs font-bold text-slate-600 uppercase block mb-1">2. Telefon Raqami</label>
+                <div className="relative">
+                  <input
+                    type="text"
+                    required
+                    value={loginPhone}
+                    onChange={(e) => setLoginPhone(e.target.value)}
+                    placeholder="+998 (90) 123-45-67"
+                    className="w-full bg-slate-50 border border-slate-200 rounded-xl pl-10 pr-4 py-3 text-sm font-semibold outline-none focus:border-blue-500"
+                  />
+                  <Phone className="w-4 h-4 text-slate-400 absolute left-3.5 top-3.5" />
+                </div>
+              </div>
+
+              {/* FIELD #3: PAROL */}
+              <div>
+                <label className="text-xs font-bold text-slate-600 uppercase block mb-1">3. Parol</label>
                 <div className="relative">
                   <input
                     type={showPassword ? "text" : "password"}
@@ -747,6 +764,27 @@ export default function MaktabStartApp() {
                 <span className="text-[11px] text-slate-400 font-medium mt-1 block">Xavfsiz: Parolingiz shifrlangan holda saqlanadi.</span>
               </div>
 
+              {/* FIELD #4: ROLINGIZ */}
+              <div>
+                <label className="text-xs font-bold text-slate-600 uppercase block mb-1">4. Sizning Rolingiz</label>
+                <div className="grid grid-cols-3 gap-2">
+                  {(["Ota-ona", "O'quvchi", "O'qituvchi"] as const).map((r) => (
+                    <button
+                      key={r}
+                      type="button"
+                      onClick={() => setLoginRole(r)}
+                      className={`py-2.5 px-2 rounded-xl border font-bold text-xs transition-all ${
+                        loginRole === r
+                          ? "bg-blue-600 text-white border-blue-600 shadow-sm"
+                          : "bg-slate-50 border-slate-200 text-slate-700 hover:bg-slate-100"
+                      }`}
+                    >
+                      {r === "Ota-ona" ? "👨‍👩‍👦" : r === "O'quvchi" ? "🎒" : "👩‍🏫"} {r}
+                    </button>
+                  ))}
+                </div>
+              </div>
+
               <button
                 type="submit"
                 className="w-full py-4 rounded-2xl bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 text-white font-extrabold text-base shadow-xl shadow-blue-500/25 transition-all cursor-pointer mt-2"
@@ -754,6 +792,102 @@ export default function MaktabStartApp() {
                 Kirish / Akkaunt Yaratish
               </button>
             </form>
+          </div>
+        </div>
+      )}
+
+      {/* WISHLIST DRAWER / SEVIMLILAR MODALI ("SEVIMLILARGA KIRISH TO'LIQ ISHLAYDI") */}
+      {isWishlistOpen && (
+        <div className="fixed inset-0 z-50 bg-slate-900/60 backdrop-blur-sm flex justify-end animate-fade-in">
+          <div className="bg-white w-full max-w-md h-full shadow-2xl flex flex-col justify-between animate-slide-in-right">
+            {/* Wishlist Header */}
+            <div className="p-6 border-b border-slate-100 flex items-center justify-between">
+              <div className="flex items-center gap-2.5">
+                <div className="w-10 h-10 rounded-xl bg-rose-50 text-rose-500 flex items-center justify-center">
+                  <Heart className="w-5 h-5 fill-rose-500" />
+                </div>
+                <div>
+                  <h3 className="font-bold text-lg text-slate-900">Sevimli Mahsulotlar</h3>
+                  <span className="text-xs text-slate-500 font-medium">{wishlistProducts.length} ta saqlangan</span>
+                </div>
+              </div>
+              <button onClick={() => setIsWishlistOpen(false)} className="p-2 rounded-xl hover:bg-slate-100 text-slate-500">
+                <X className="w-5 h-5" />
+              </button>
+            </div>
+
+            {/* Wishlist Items List */}
+            <div className="flex-1 overflow-y-auto p-6 space-y-4">
+              {wishlistProducts.length === 0 ? (
+                <div className="h-full flex flex-col items-center justify-center text-center text-slate-400">
+                  <Heart className="w-16 h-16 stroke-1 mb-3 text-slate-300" />
+                  <p className="font-semibold text-base text-slate-600">Sevimlilar ro'yxati hozircha bo'sh</p>
+                  <p className="text-xs text-slate-400 mt-1 max-w-xs">
+                    Mahsulot kartasidagi ❤️ yurakchani bosib sevimli qurollaringizni shu yerda saqlashingiz mumkin!
+                  </p>
+                  <button
+                    onClick={() => {
+                      setIsWishlistOpen(false);
+                      setActiveTab("catalog");
+                    }}
+                    className="mt-4 px-5 py-2.5 rounded-xl bg-blue-600 text-white font-bold text-xs"
+                  >
+                    Katalogdan Tanlash
+                  </button>
+                </div>
+              ) : (
+                wishlistProducts.map((prod) => (
+                  <div key={prod.id} className="p-4 rounded-2xl bg-slate-50 border border-slate-200/80 flex flex-col sm:flex-row gap-3 items-center justify-between">
+                    <div className="flex items-center gap-3 w-full sm:w-auto">
+                      <div className="w-16 h-16 rounded-xl bg-white overflow-hidden shadow-sm shrink-0 border border-slate-100">
+                        <img src={prod.image} alt={prod.title} className="w-full h-full object-cover" />
+                      </div>
+                      <div className="min-w-0 flex-1">
+                        <span className="text-[10px] bg-blue-50 text-blue-700 px-2 py-0.5 rounded font-bold">{prod.category}</span>
+                        <h4 className="font-semibold text-slate-900 text-sm line-clamp-1 mt-1">{prod.title}</h4>
+                        <span className="text-xs font-extrabold text-blue-600 block mt-0.5">{prod.price.toLocaleString()} so'm</span>
+                      </div>
+                    </div>
+
+                    <div className="flex items-center gap-2 w-full sm:w-auto justify-end pt-2 sm:pt-0 border-t sm:border-0 border-slate-200">
+                      <button
+                        onClick={() => {
+                          addToCart(prod, 1);
+                        }}
+                        className="px-3.5 py-2 rounded-xl bg-blue-600 hover:bg-blue-700 text-white font-bold text-xs flex items-center gap-1.5 shadow-sm"
+                      >
+                        <Plus className="w-3.5 h-3.5 stroke-[3]" />
+                        <span>Savatga</span>
+                      </button>
+                      <button
+                        onClick={() => toggleWishlist(prod.id)}
+                        className="p-2 rounded-xl bg-white border border-slate-200 text-slate-400 hover:text-rose-500"
+                        title="Sevimlilardan o'chirish"
+                      >
+                        <Trash2 className="w-4 h-4" />
+                      </button>
+                    </div>
+                  </div>
+                ))
+              )}
+            </div>
+
+            {/* Wishlist Footer */}
+            {wishlistProducts.length > 0 && (
+              <div className="p-6 border-t border-slate-200 bg-slate-50/50 space-y-3">
+                <button
+                  onClick={() => {
+                    wishlistProducts.forEach((prod) => addToCart(prod, 1));
+                    setIsWishlistOpen(false);
+                    setIsCartOpen(true);
+                  }}
+                  className="w-full py-4 rounded-2xl bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 text-white font-bold text-base shadow-xl shadow-blue-500/25 flex items-center justify-center gap-2 transition-all cursor-pointer"
+                >
+                  <ShoppingCart className="w-5 h-5" />
+                  <span>Barcha Sevimlilarni Savatga Qo'shish</span>
+                </button>
+              </div>
+            )}
           </div>
         </div>
       )}
@@ -1075,9 +1209,11 @@ export default function MaktabStartApp() {
               </button>
             )}
 
+            {/* SEVIMLILAR / WISHLIST BUTTON (OPENS MODAL DRAWER) */}
             <button
-              onClick={() => showToast(`❤️ Sizda ${wishlist.length} ta sevimli mahsulot bor`)}
-              className="relative w-9 h-9 rounded-xl bg-slate-100 hover:bg-slate-200/80 text-slate-700 flex items-center justify-center transition-colors"
+              onClick={() => setIsWishlistOpen(true)}
+              className="relative w-9 h-9 rounded-xl bg-slate-100 hover:bg-rose-50 text-slate-700 hover:text-rose-600 flex items-center justify-center transition-colors cursor-pointer"
+              title="Sevimli mahsulotlar"
             >
               <Heart className="w-4 h-4 text-rose-500 fill-rose-500/20" />
               {wishlist.length > 0 && (
@@ -1395,16 +1531,15 @@ export default function MaktabStartApp() {
         )}
 
         {/* ========================================================================= */}
-        {/* TAB 2: 180+ MEGA-KATALOG (EXACTLY AS IN USER SCREENSHOT + BONUS CATEGORIES) */}
+        {/* TAB 2: 180+ MEGA-KATALOG */}
         {/* ========================================================================= */}
         {activeTab === "megacatalog" && (
           <div className="bg-slate-950 text-slate-100 min-h-screen py-12 px-4 sm:px-6 lg:px-8 animate-fade-in">
             <div className="max-w-7xl mx-auto space-y-10">
               
-              {/* Top Banner Header matching the screenshot aesthetic */}
               <div className="text-center max-w-4xl mx-auto space-y-3">
                 <span className="bg-blue-500/20 text-blue-400 border border-blue-500/30 px-4 py-1.5 rounded-full text-xs font-bold uppercase tracking-widest inline-block">
-                  📦 Rekonfiguratsiya qildi — grid ustunlarini uchta qatorga
+                  📦 Rekonfiguratsiya qilingan — 3 qatorli zamonaviy ustun
                 </span>
                 <h1 className="text-3xl sm:text-5xl font-extrabold tracking-tight text-white">
                   To'liq mahsulotlar katalogi
@@ -1413,7 +1548,6 @@ export default function MaktabStartApp() {
                   12 kategoriya, 180 dan ortiq mahsulot turi (Istalgan tugmani bosing — savatga tushadi!)
                 </p>
 
-                {/* Instant Search Bar Inside Mega Catalog */}
                 <div className="pt-4 max-w-xl mx-auto relative">
                   <div className="relative flex items-center">
                     <Search className="w-5 h-5 text-blue-400 absolute left-4" />
@@ -1433,7 +1567,6 @@ export default function MaktabStartApp() {
                 </div>
               </div>
 
-              {/* 3-Column Sleek Dark Grid of 12 Categories */}
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                 {MEGA_CATALOG_DATA.map((cat) => {
                   const filteredCatItems = cat.items.filter((item) =>
@@ -1451,7 +1584,6 @@ export default function MaktabStartApp() {
                       key={cat.id}
                       className="bg-slate-900/90 border border-slate-800/80 rounded-2xl overflow-hidden shadow-2xl flex flex-col justify-between transition-all hover:border-slate-700"
                     >
-                      {/* Colored Top Header Bar exactly as in screenshot */}
                       <div className={`${cat.headerBg} py-3.5 px-5 font-extrabold text-sm sm:text-base tracking-wide flex items-center justify-between shadow-md`}>
                         <span>{cat.title}</span>
                         <span className="bg-black/25 px-2.5 py-0.5 rounded-full text-xs font-bold">
@@ -1459,7 +1591,6 @@ export default function MaktabStartApp() {
                         </span>
                       </div>
 
-                      {/* Pill / Chip Buttons Body */}
                       <div className="p-4 sm:p-5 flex flex-wrap gap-2 flex-1 items-start">
                         {filteredCatItems.map((item, idx) => (
                           <button
@@ -1474,7 +1605,6 @@ export default function MaktabStartApp() {
                         ))}
                       </div>
 
-                      {/* Bottom quick action footer */}
                       <div className="px-5 py-3 border-t border-slate-800/80 bg-slate-900/50 flex items-center justify-between text-xs text-slate-400 font-semibold">
                         <span>💡 Bosing va savatingizga soling</span>
                         <span className="text-blue-400 font-bold">O'zbekiston standartlari</span>
@@ -1627,7 +1757,10 @@ export default function MaktabStartApp() {
                             <span className="text-xl font-extrabold text-slate-900">{prod.price.toLocaleString()} <span className="text-xs font-normal text-slate-500">so'm</span></span>
                           </div>
                           <div className="flex items-center gap-2">
-                            <button onClick={() => toggleWishlist(prod.id)} className="w-10 h-10 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-600 hover:text-rose-500 flex items-center justify-center transition-colors">
+                            <button
+                              onClick={() => toggleWishlist(prod.id)}
+                              className="w-10 h-10 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-600 hover:text-rose-500 flex items-center justify-center transition-colors cursor-pointer"
+                            >
                               <Heart className={`w-5 h-5 ${wishlist.includes(prod.id) ? "text-rose-500 fill-rose-500" : ""}`} />
                             </button>
                             <button
@@ -1649,7 +1782,10 @@ export default function MaktabStartApp() {
                         <div className="relative aspect-square w-full rounded-xl bg-slate-50 overflow-hidden mb-4 border border-slate-200 shadow-inner">
                           <img src={prod.image} alt={prod.title} className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500" />
                           {prod.badge && <span className={`absolute top-3 left-3 text-white text-[11px] font-extrabold px-2.5 py-1 rounded-full shadow-sm ${prod.badgeColor}`}>{prod.badge}</span>}
-                          <button onClick={() => toggleWishlist(prod.id)} className="absolute top-3 right-3 w-8 h-8 rounded-full bg-white/90 backdrop-blur text-slate-600 hover:text-rose-500 flex items-center justify-center shadow-sm transition-colors">
+                          <button
+                            onClick={() => toggleWishlist(prod.id)}
+                            className="absolute top-3 right-3 w-8 h-8 rounded-full bg-white/90 backdrop-blur text-slate-600 hover:text-rose-500 flex items-center justify-center shadow-sm transition-colors cursor-pointer"
+                          >
                             <Heart className={`w-4 h-4 ${wishlist.includes(prod.id) ? "text-rose-500 fill-rose-500" : ""}`} />
                           </button>
                         </div>
@@ -1836,10 +1972,10 @@ export default function MaktabStartApp() {
                   <span className="text-2xl font-extrabold text-slate-900">2 ta</span>
                   <span className="text-xs text-slate-500 font-bold block">Faol buyurtmalar</span>
                 </div>
-                <div className="p-5 rounded-2xl bg-slate-50 border border-slate-200/80 text-center space-y-1">
+                <div className="p-5 rounded-2xl bg-slate-50 border border-slate-200/80 text-center space-y-1 cursor-pointer hover:bg-slate-100 transition-colors" onClick={() => setIsWishlistOpen(true)}>
                   <Heart className="w-6 h-6 text-rose-500 mx-auto mb-2" />
                   <span className="text-2xl font-extrabold text-slate-900">{wishlist.length} ta</span>
-                  <span className="text-xs text-slate-500 font-bold block">Sevimli mahsulotlar</span>
+                  <span className="text-xs text-slate-500 font-bold block">Sevimli mahsulotlar (ko'rish)</span>
                 </div>
                 <div className="p-5 rounded-2xl bg-slate-50 border border-slate-200/80 text-center space-y-1">
                   <Award className="w-6 h-6 text-amber-500 mx-auto mb-2" />
@@ -1896,10 +2032,10 @@ export default function MaktabStartApp() {
           <div>
             <h4 className="text-white font-extrabold text-sm mb-4 uppercase tracking-wider">Mijozlarga yordam</h4>
             <ul className="space-y-2 text-sm font-medium">
+              <li><button onClick={() => setIsWishlistOpen(true)} className="hover:text-white transition-colors cursor-pointer">❤️ Sevimli Mahsulotlar</button></li>
               <li><button onClick={() => setActiveTab("checklist")} className="hover:text-white transition-colors cursor-pointer">Interaktiv Maktab Checklist</button></li>
               <li><button onClick={() => setActiveTab("calculator")} className="hover:text-white transition-colors cursor-pointer">Byudjet Kalkulyatori</button></li>
               <li><a href="#grade-assistant-section" className="hover:text-white transition-colors">Smart Grade Assistant</a></li>
-              <li><span className="text-emerald-400 font-bold">Yetkazib berish: 24 soatda</span></li>
             </ul>
           </div>
 
