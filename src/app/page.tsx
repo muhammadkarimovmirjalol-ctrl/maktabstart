@@ -40,7 +40,8 @@ import {
   EyeOff,
   Lock,
   UserCheck,
-  Bell
+  Bell,
+  Layers
 } from "lucide-react";
 
 // Types
@@ -75,10 +76,10 @@ interface UserAccount {
 
 // Background Study Images (4 Premium Unsplash Photos with Blur)
 const STUDY_BACKGROUNDS = [
-  "https://images.unsplash.com/photo-1503676260728-1c00da094a0b?q=80&w=2000&auto=format&fit=crop", // School supplies & books
-  "https://images.unsplash.com/photo-1577896851231-70ef18881754?q=80&w=2000&auto=format&fit=crop", // Study table & stationery
-  "https://images.unsplash.com/photo-1497633762265-9d179a990aa6?q=80&w=2000&auto=format&fit=crop", // Library & notebooks
-  "https://images.unsplash.com/photo-1580582932707-520aed937b7b?q=80&w=2000&auto=format&fit=crop", // Backpack & pencils
+  "https://images.unsplash.com/photo-1503676260728-1c00da094a0b?q=80&w=2000&auto=format&fit=crop",
+  "https://images.unsplash.com/photo-1577896851231-70ef18881754?q=80&w=2000&auto=format&fit=crop",
+  "https://images.unsplash.com/photo-1497633762265-9d179a990aa6?q=80&w=2000&auto=format&fit=crop",
+  "https://images.unsplash.com/photo-1580582932707-520aed937b7b?q=80&w=2000&auto=format&fit=crop",
 ];
 
 // Expanded 16+ Real School Products with HIGH-RESOLUTION PHOTOS (Uzbekistan Favorites)
@@ -113,9 +114,254 @@ const GRADE_PACKAGES: Record<number, { title: string; price: number; oldPrice: n
 
 const CATEGORIES = ["Barchasi", "Maktab Sumkalari", "Daftarlar", "Qalamlar", "Ruchkalar", "Geometriya", "Forma", "Aksessuarlar"];
 
+// =========================================================================================
+// 12 CATEGORIES & 180+ PRODUCTS MEGA-CATALOG DATA (INSPIRED BY USER SCREENSHOT + BONUS)
+// =========================================================================================
+const MEGA_CATALOG_DATA = [
+  {
+    id: 1,
+    title: "Forma va kiyim-kechak",
+    headerBg: "bg-orange-600 text-white",
+    items: [
+      { name: "O'g'il bolalar kostyumi", price: 320000 },
+      { name: "Qiz bolalar sarafani", price: 250000 },
+      { name: "Maktab yubkasi", price: 110000 },
+      { name: "Oq ko'ylak, qisqa yeng", price: 95000 },
+      { name: "Oq ko'ylak, uzun yeng", price: 120000 },
+      { name: "Bluzka", price: 115000 },
+      { name: "Galstuk", price: 25000 },
+      { name: "Bantik", price: 18000 },
+      { name: "Kardigan/jemper", price: 160000 },
+      { name: "Jilet", price: 95000 },
+      { name: "Sport formasi", price: 185000 },
+      { name: "Sport krossovkasi", price: 210000 },
+      { name: "Maktab poyabzali", price: 230000 },
+      { name: "Kurtka", price: 350000 },
+      { name: "Yomg'ir plashi", price: 75000 },
+      { name: "Paypoq to'plami", price: 30000 },
+      { name: "Ichki kiyim", price: 45000 },
+      { name: "Qo'lqop", price: 25000 },
+      { name: "Shapka", price: 40000 },
+      { name: "Oq aprong (farstuk)", price: 65000 }
+    ]
+  },
+  {
+    id: 2,
+    title: "Daftarlar va qog'oz",
+    headerBg: "bg-indigo-600 text-white",
+    items: [
+      { name: "12 varaq, chiziqli", price: 2000 },
+      { name: "12 varaq, katakli", price: 2000 },
+      { name: "18 varaq, katakli", price: 2800 },
+      { name: "24 varaq, katakli", price: 3500 },
+      { name: "48 varaq, fan daftari", price: 6000 },
+      { name: "60 varaq", price: 7500 },
+      { name: "80 varaq", price: 9000 },
+      { name: "96 varaq, katta", price: 12000 },
+      { name: "120 varaq, qalin", price: 16000 },
+      { name: "Spiral bloknot", price: 18000 },
+      { name: "Matematika daftari", price: 4500 },
+      { name: "Til daftari", price: 4500 },
+      { name: "Chizmachilik albomi", price: 15000 },
+      { name: "Rasm albomi", price: 12000 },
+      { name: "Kundalik (dnevnik)", price: 18000 },
+      { name: "Nazorat ishi daftari", price: 5000 },
+      { name: "Referat qog'ozlari", price: 25000 },
+      { name: "Sticky notes", price: 14000 },
+      { name: "Millimetrovka qog'ozi", price: 8000 },
+      { name: "Yozuv bloknoti", price: 10000 },
+      { name: "Lug'at daftari", price: 6500 },
+      { name: "Notasiya daftari", price: 9000 }
+    ]
+  },
+  {
+    id: 3,
+    title: "Yozuv vositalari",
+    headerBg: "bg-pink-600 text-white",
+    items: [
+      { name: "HB grafit qalam", price: 2500 },
+      { name: "2B/3B qalam", price: 3000 },
+      { name: "Mexanik qalam 0.5mm", price: 12000 },
+      { name: "Zapas grafit", price: 5000 },
+      { name: "12 rangli qalam", price: 22000 },
+      { name: "18 rangli qalam", price: 32000 },
+      { name: "24 rangli qalam", price: 45000 },
+      { name: "36 rangli qalam", price: 65000 },
+      { name: "Ko'k ruchka", price: 2200 },
+      { name: "Qora ruchka", price: 2200 },
+      { name: "Qizil ruchka", price: 2200 },
+      { name: "4 rangli ruchka", price: 8000 },
+      { name: "Gel ruchka", price: 3500 },
+      { name: "Flomaster, 12 rang", price: 18000 },
+      { name: "Flomaster, 24 rang", price: 34000 },
+      { name: "Highlighter", price: 14000 },
+      { name: "Uchlagich, bir teshikli", price: 3000 },
+      { name: "Uchlagich, quticha bilan", price: 6000 },
+      { name: "O'chirg'ich, oddiy", price: 2500 },
+      { name: "O'chirg'ich, rangli uchun", price: 4000 },
+      { name: "Kapillyar ruchkalar", price: 18000 },
+      { name: "Kalligrafiya pero", price: 24000 }
+    ]
+  },
+  {
+    id: 4,
+    title: "Chizish asboblari",
+    headerBg: "bg-amber-600 text-white",
+    items: [
+      { name: "Lineyka, 15 sm", price: 3000 },
+      { name: "Lineyka, 20 sm", price: 4500 },
+      { name: "Lineyka, 30 sm", price: 6000 },
+      { name: "Transportir", price: 4000 },
+      { name: "Sirkul", price: 18000 },
+      { name: "Sirkul to'plami", price: 35000 },
+      { name: "Uchburchak lineyka juftligi", price: 8000 },
+      { name: "Geometrik nabor", price: 40000 },
+      { name: "Trafaret", price: 7000 },
+      { name: "Qalam ushlagich", price: 12000 },
+      { name: "Reysmus chizg'ichi", price: 15000 },
+      { name: "Lekalo chizg'ichi", price: 14000 }
+    ]
+  },
+  {
+    id: 5,
+    title: "Bo'yoq va ijodkorlik",
+    headerBg: "bg-emerald-600 text-white",
+    items: [
+      { name: "Guash, 6 rang", price: 16000 },
+      { name: "Guash, 12 rang", price: 28000 },
+      { name: "Akvarel, 12 rang", price: 20000 },
+      { name: "Akvarel, 24 rang", price: 36000 },
+      { name: "Cho'tkalar to'plami", price: 18000 },
+      { name: "Palitra", price: 8000 },
+      { name: "Suv idishi", price: 5000 },
+      { name: "Plastilin, 6 rang", price: 12000 },
+      { name: "Plastilin, 12 rang", price: 20000 },
+      { name: "Rangli qog'oz", price: 10000 },
+      { name: "Rangli karton", price: 14000 },
+      { name: "Gofrirovka qog'ozi", price: 12000 },
+      { name: "Qaychi", price: 9000 },
+      { name: "PVA elim", price: 6000 },
+      { name: "Qalam elim", price: 5000 },
+      { name: "Skotch", price: 4000 },
+      { name: "Ikki tomonlama skotch", price: 7000 },
+      { name: "Akril bo'yoqlar", price: 38000 }
+    ]
+  },
+  {
+    id: 6,
+    title: "Sumka va aksessuar",
+    headerBg: "bg-blue-600 text-white",
+    items: [
+      { name: "Ortopedik ryukzak", price: 245000 },
+      { name: "Kichik ryukzak", price: 160000 },
+      { name: "Sport sumkasi", price: 110000 },
+      { name: "Penal, bir qavatli", price: 25000 },
+      { name: "Penal, ko'p bo'limli", price: 45000 },
+      { name: "Fayl-papka A4", price: 1500 },
+      { name: "Ko'p bo'limli papka", price: 28000 },
+      { name: "Papka-planshet", price: 22000 },
+      { name: "Daftar g'ilofi", price: 1000 },
+      { name: "Kundalik g'ilofi", price: 2000 },
+      { name: "Kitob g'ilofi", price: 3000 },
+      { name: "Kartalar qutisi", price: 15000 },
+      { name: "Sumka yomg'irpechi", price: 35000 },
+      { name: "Bel sumkasi", price: 65000 }
+    ]
+  },
+  {
+    id: 7,
+    title: "Elektronika",
+    headerBg: "bg-lime-600 text-white",
+    items: [
+      { name: "Oddiy kalkulyator", price: 35000 },
+      { name: "Ilmiy kalkulyator", price: 85000 },
+      { name: "Elektron lug'at", price: 140000 },
+      { name: "Planshet", price: 1800000 },
+      { name: "Noutbuk", price: 3900000 },
+      { name: "Simsiz quloqchin", price: 150000 },
+      { name: "Quvvat banki", price: 180000 },
+      { name: "USB fleshka 32GB", price: 65000 },
+      { name: "Stol LED chirog'i", price: 120000 }
+    ]
+  },
+  {
+    id: 8,
+    title: "Sport buyumlari",
+    headerBg: "bg-red-600 text-white",
+    items: [
+      { name: "Sport formasi", price: 185000 },
+      { name: "Krossovka", price: 210000 },
+      { name: "Sport sumkasi", price: 110000 },
+      { name: "Suzish anjomlari", price: 95000 },
+      { name: "Sport butilkasi", price: 45000 },
+      { name: "Sport sochiqchasi", price: 35000 },
+      { name: "Sakrash arqoni (skakalka)", price: 25000 },
+      { name: "Gimnastika gilamchasi", price: 130000 }
+    ]
+  },
+  {
+    id: 9,
+    title: "Gigiyena va ehtiyoj",
+    headerBg: "bg-stone-600 text-white",
+    items: [
+      { name: "Qo'l antiseptigi", price: 12000 },
+      { name: "Salfetka", price: 4000 },
+      { name: "Niqob", price: 1000 },
+      { name: "Suv butilkasi", price: 65000 },
+      { name: "Tushlik qutisi", price: 55000 },
+      { name: "Idish-tovoq to'plami", price: 45000 },
+      { name: "Tish cho'tkasi qutisi", price: 18000 },
+      { name: "Shaxsiy sochiqcha", price: 25000 }
+    ]
+  },
+  {
+    id: 10,
+    title: "Qo'shimcha aksessuar",
+    headerBg: "bg-purple-600 text-white",
+    items: [
+      { name: "Bolalar soati", price: 120000 },
+      { name: "ID-karta", price: 15000 },
+      { name: "Kalit bilaguzugi", price: 12000 },
+      { name: "Kundalik uchun lenta", price: 8000 },
+      { name: "Nishon va shevronlar", price: 10000 },
+      { name: "Yorug'lik qaytaruvchi stiker", price: 14000 },
+      { name: "Sumka brelogi", price: 18000 }
+    ]
+  },
+  {
+    id: 11,
+    title: "Fan kabinetlari uchun maxsus",
+    headerBg: "bg-cyan-600 text-white",
+    items: [
+      { name: "Fizika laboratoriya nabori", price: 190000 },
+      { name: "Kimyo xavfsizlik ko'zoynagi", price: 45000 },
+      { name: "Biologiya mikroskopi", price: 380000 },
+      { name: "Geografiya globusi", price: 120000 },
+      { name: "O'zbekiston atlas xaritasi", price: 35000 },
+      { name: "Jahon siyosiy xaritasi", price: 40000 },
+      { name: "Tarixiy kontur xaritalar", price: 18000 },
+      { name: "Periodik jadval (Mendeleyev)", price: 15000 }
+    ]
+  },
+  {
+    id: 12,
+    title: "O'qituvchilar va Sinf rahbarlari uchun",
+    headerBg: "bg-teal-600 text-white",
+    items: [
+      { name: "Sinf jurnali g'ilofi", price: 25000 },
+      { name: "Qizil tekshiruv ruchkalari", price: 12000 },
+      { name: "Magnit doska markeri", price: 15000 },
+      { name: "Doska o'chirg'ich", price: 18000 },
+      { name: "Lazer ko'rsatkich (ukazka)", price: 55000 },
+      { name: "Sertifikat qog'ozlari", price: 45000 },
+      { name: "Baholash stikerlari to'plami", price: 20000 }
+    ]
+  }
+];
+
 export default function MaktabStartApp() {
   // Navigation & Tabs state
-  const [activeTab, setActiveTab] = useState<"home" | "catalog" | "checklist" | "calculator" | "account">("home");
+  const [activeTab, setActiveTab] = useState<"home" | "megacatalog" | "catalog" | "checklist" | "calculator" | "account">("home");
   const [selectedGrade, setSelectedGrade] = useState<number>(5);
   const [bgIndex, setBgIndex] = useState(0);
   
@@ -125,7 +371,7 @@ export default function MaktabStartApp() {
     phone: "+998 90 123 45 67",
     role: "Ota-ona",
     avatar: "https://github.com/muhammadkarimovmirjalol-ctrl.png",
-    isLoggedIn: true, // Logged in by default so the user immediately sees THEIR photo!
+    isLoggedIn: true,
   });
   const [isLoginModalOpen, setIsLoginModalOpen] = useState(false);
   
@@ -137,7 +383,7 @@ export default function MaktabStartApp() {
   const [showPassword, setShowPassword] = useState(false);
 
   // Purpose Intro Modal State
-  const [showPurposeModal, setShowPurposeModal] = useState(false); // Can be opened via header button
+  const [showPurposeModal, setShowPurposeModal] = useState(false);
 
   // Cart & Wishlist state
   const [cart, setCart] = useState<CartItem[]>([
@@ -150,10 +396,11 @@ export default function MaktabStartApp() {
 
   // Search & Catalog Filter State
   const [searchQuery, setSearchQuery] = useState("");
+  const [megaSearchQuery, setMegaSearchQuery] = useState("");
   const [selectedCategory, setSelectedCategory] = useState("Barchasi");
   const [selectedGradeFilter, setSelectedGradeFilter] = useState<number | null>(null);
   const [sortBy, setSortBy] = useState<"popular" | "price-asc" | "price-desc">("popular");
-  const [viewMode, setViewMode] = useState<"list" | "grid">("list"); // Default Row-by-Row!
+  const [viewMode, setViewMode] = useState<"list" | "grid">("list");
 
   // Checklist State
   const [checklist, setChecklist] = useState([
@@ -209,6 +456,25 @@ export default function MaktabStartApp() {
     showToast(`✅ "${product.title}" savatga qo'shildi!`);
   };
 
+  // Add Item from 180+ Mega-Catalog directly to cart
+  const addMegaItemToCart = (name: string, price: number, categoryName: string) => {
+    const megaProduct: Product = {
+      id: Math.abs(name.split("").reduce((a, b) => a + b.charCodeAt(0), 0)) + 1000,
+      title: name,
+      price: price,
+      category: categoryName,
+      grade: [1, 2, 3, 4, 5, 6, 7],
+      rating: 5.0,
+      reviews: 54,
+      badge: "Mega-Katalog",
+      badgeColor: "bg-blue-600",
+      image: "https://images.unsplash.com/photo-1503676260728-1c00da094a0b?q=80&w=800&auto=format&fit=crop",
+      inStock: true,
+      description: `${categoryName} bo'limidan ${name} — 100% yuqori sifatli maktab buyumi.`
+    };
+    addToCart(megaProduct, 1);
+  };
+
   const updateCartQuantity = (productId: number, delta: number) => {
     setCart((prev) =>
       prev
@@ -241,7 +507,6 @@ export default function MaktabStartApp() {
 
   const handleLogin = (e: React.FormEvent) => {
     e.preventDefault();
-    // Automatically append @gmail.com if not present
     const finalLogin = loginUsername.includes("@") ? loginUsername : `${loginUsername}@gmail.com`;
     setUser({
       name: finalLogin ? `Mirjalol (${finalLogin})` : "Mirjalol Muhammadkarimov",
@@ -302,7 +567,6 @@ export default function MaktabStartApp() {
             style={{ backgroundImage: `url('${bgUrl}')` }}
           />
         ))}
-        {/* Sleek Light Glass/Mesh Overlay for Apple-grade text legibility */}
         <div className="absolute inset-0 bg-gradient-to-b from-white/90 via-slate-50/95 to-white/95 backdrop-blur-[6px]" />
       </div>
 
@@ -313,7 +577,7 @@ export default function MaktabStartApp() {
         </div>
       )}
 
-      {/* ONBOARDING & PURPOSE EXPLANATION MODAL (EXPLAINING WHY USERS SHOULD ENTER) */}
+      {/* ONBOARDING & PURPOSE EXPLANATION MODAL */}
       {showPurposeModal && (
         <div className="fixed inset-0 z-50 bg-slate-900/70 backdrop-blur-md flex items-center justify-center p-4 animate-fade-in">
           <div className="bg-white rounded-3xl max-w-xl w-full p-6 sm:p-8 shadow-2xl border border-slate-200 space-y-6 relative overflow-hidden">
@@ -392,7 +656,7 @@ export default function MaktabStartApp() {
         </div>
       )}
 
-      {/* LOGIN / ACCOUNT AUTHENTICATION MODAL (UPDATED WITH AUTO @GMAIL.COM SUFFIX!) */}
+      {/* LOGIN / ACCOUNT AUTHENTICATION MODAL */}
       {isLoginModalOpen && (
         <div className="fixed inset-0 z-50 bg-slate-900/70 backdrop-blur-md flex items-center justify-center p-4 animate-fade-in">
           <div className="bg-white rounded-3xl max-w-md w-full p-6 sm:p-8 shadow-2xl border border-slate-200 space-y-6">
@@ -565,7 +829,6 @@ export default function MaktabStartApp() {
             {/* Cart Footer */}
             {cart.length > 0 && (
               <div className="p-6 border-t border-slate-200 bg-slate-50/50 space-y-4">
-                {/* Coupon Input */}
                 <div className="flex gap-2">
                   <input
                     type="text"
@@ -579,7 +842,6 @@ export default function MaktabStartApp() {
                   </button>
                 </div>
 
-                {/* Totals */}
                 <div className="space-y-1.5 text-xs text-slate-600 font-medium">
                   <div className="flex justify-between">
                     <span>Mahsulotlar summasi:</span>
@@ -738,7 +1000,7 @@ export default function MaktabStartApp() {
             </div>
           </div>
 
-          {/* LIVE INSTANT SEARCH INPUT (AUTO-FILTERS ACCURATELY IN REAL TIME) */}
+          {/* LIVE INSTANT SEARCH INPUT */}
           <div className="flex-1 max-w-md hidden sm:block relative">
             <div className="relative flex items-center">
               <Search className="w-4 h-4 text-blue-600 absolute left-3.5" />
@@ -761,7 +1023,8 @@ export default function MaktabStartApp() {
           <div className="hidden lg:flex items-center gap-1 bg-slate-100/80 p-1 rounded-2xl border border-slate-200/60 font-semibold text-xs">
             {[
               { id: "home", label: "🏠 Asosiy" },
-              { id: "catalog", label: "🛍️ Katalog & Qidiruv" },
+              { id: "megacatalog", label: "📦 180+ Mega-Katalog" },
+              { id: "catalog", label: "🛍️ Rasmli Do'kon" },
               { id: "checklist", label: "📝 Checklist" },
               { id: "calculator", label: "🧮 Kalkulyator" },
             ].map((tab) => (
@@ -782,9 +1045,8 @@ export default function MaktabStartApp() {
             ))}
           </div>
 
-          {/* User Account & Actions (WITH MIRJALOL'S PHOTO PILL!) */}
+          {/* User Account & Actions */}
           <div className="flex items-center gap-2.5 shrink-0">
-            {/* Purpose Help Button */}
             <button
               onClick={() => setShowPurposeModal(true)}
               className="w-9 h-9 rounded-xl bg-blue-50 hover:bg-blue-100 text-blue-600 flex items-center justify-center transition-colors font-bold text-xs shadow-sm"
@@ -793,7 +1055,6 @@ export default function MaktabStartApp() {
               <Info className="w-4 h-4" />
             </button>
 
-            {/* Login / User Account Pill (WITH AVATAR PHOTO) */}
             {user.isLoggedIn ? (
               <button
                 onClick={() => setActiveTab("account")}
@@ -861,7 +1122,8 @@ export default function MaktabStartApp() {
         {/* Mobile Nav Tabs */}
         <div className="lg:hidden border-t border-slate-200 bg-white/95 px-4 py-2 flex items-center justify-around overflow-x-auto text-xs font-bold text-slate-700 gap-1.5">
           <button onClick={() => { setActiveTab("home"); setSearchQuery(""); }} className={`px-2.5 py-1.5 rounded-lg ${activeTab === "home" ? "bg-blue-600 text-white" : "bg-slate-100"}`}>🏠 Asosiy</button>
-          <button onClick={() => setActiveTab("catalog")} className={`px-2.5 py-1.5 rounded-lg ${activeTab === "catalog" ? "bg-blue-600 text-white" : "bg-slate-100"}`}>🛍️ Katalog</button>
+          <button onClick={() => setActiveTab("megacatalog")} className={`px-2.5 py-1.5 rounded-lg ${activeTab === "megacatalog" ? "bg-blue-600 text-white" : "bg-slate-100"}`}>📦 Mega-Katalog</button>
+          <button onClick={() => setActiveTab("catalog")} className={`px-2.5 py-1.5 rounded-lg ${activeTab === "catalog" ? "bg-blue-600 text-white" : "bg-slate-100"}`}>🛍️ Do'kon</button>
           <button onClick={() => setActiveTab("checklist")} className={`px-2.5 py-1.5 rounded-lg ${activeTab === "checklist" ? "bg-blue-600 text-white" : "bg-slate-100"}`}>📝 Checklist</button>
           <button onClick={() => setActiveTab("calculator")} className={`px-2.5 py-1.5 rounded-lg ${activeTab === "calculator" ? "bg-blue-600 text-white" : "bg-slate-100"}`}>🧮 Kalkulyator</button>
         </div>
@@ -871,15 +1133,13 @@ export default function MaktabStartApp() {
       <main className="flex-1 relative z-10">
         
         {/* ========================================================================= */}
-        {/* TAB 1: HOME & GRADE ASSISTANT (WITH NEW USER HERO WITH MIRJALOL'S PHOTO) */}
+        {/* TAB 1: HOME & GRADE ASSISTANT */}
         {/* ========================================================================= */}
         {activeTab === "home" && (
           <div className="animate-fade-in">
-            {/* NEW UPGRADED HERO SECTION WITH USER PHOTO / DESIGN */}
             <section className="relative overflow-hidden pt-10 pb-20 md:pt-16 md:pb-28">
               <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
                 
-                {/* User Greeting & Purpose Intro Banner (WITH MIRJALOL'S PHOTO IN HERO!) */}
                 <div className="bg-gradient-to-r from-blue-900 via-indigo-900 to-slate-900 text-white rounded-3xl p-6 sm:p-8 shadow-2xl mb-12 border border-blue-500/30 flex flex-col md:flex-row items-center justify-between gap-6 relative overflow-hidden">
                   <div className="absolute top-0 right-0 w-64 h-64 bg-blue-500/20 rounded-full blur-3xl pointer-events-none" />
                   
@@ -895,7 +1155,6 @@ export default function MaktabStartApp() {
                     </p>
                   </div>
 
-                  {/* Hero User Custom Photo Card */}
                   <div className="bg-white/10 backdrop-blur-md border border-white/20 p-5 rounded-2xl text-center shrink-0 w-full md:w-64 space-y-3 shadow-lg">
                     <div className="w-20 h-20 rounded-2xl overflow-hidden mx-auto shadow-md border-2 border-white/40">
                       <img src={user.avatar} alt="Mirjalol Photo" className="w-full h-full object-cover" />
@@ -929,6 +1188,14 @@ export default function MaktabStartApp() {
 
                   <div className="pt-4 flex flex-col sm:flex-row items-center justify-center gap-4">
                     <button
+                      onClick={() => setActiveTab("megacatalog")}
+                      className="w-full sm:w-auto px-8 py-4 rounded-2xl bg-gradient-to-r from-slate-900 via-indigo-900 to-slate-900 hover:bg-slate-800 text-white font-bold text-base shadow-xl flex items-center justify-center gap-3 transition-all hover:-translate-y-0.5 active:translate-y-0 cursor-pointer border border-slate-700"
+                    >
+                      <Layers className="w-5 h-5 text-amber-400" />
+                      <span>📦 180+ Mega Katalog (Barcha Turlar)</span>
+                      <ArrowRight className="w-4 h-4" />
+                    </button>
+                    <button
                       onClick={() => {
                         const el = document.getElementById("grade-assistant-section");
                         el?.scrollIntoView({ behavior: "smooth" });
@@ -937,18 +1204,16 @@ export default function MaktabStartApp() {
                     >
                       <GraduationCap className="w-5 h-5" />
                       <span>Sinf bo'yicha yig'ish</span>
-                      <ArrowRight className="w-4 h-4" />
                     </button>
                     <button
                       onClick={() => setActiveTab("catalog")}
                       className="w-full sm:w-auto px-8 py-4 rounded-2xl bg-white/90 hover:bg-white text-slate-900 font-bold text-base border border-slate-300 shadow-sm flex items-center justify-center gap-2 transition-all cursor-pointer"
                     >
-                      <span>🛍️ 16+ Mahsulotlar (Rasmlar bilan)</span>
+                      <span>🛍️ 16+ Rasmli Do'kon</span>
                     </button>
                   </div>
                 </div>
 
-                {/* Benefits 4-Card Grid */}
                 <div className="mt-16 grid grid-cols-2 md:grid-cols-4 gap-4 max-w-5xl mx-auto">
                   {[
                     { icon: Truck, title: "1 Kunda Yetkazish", desc: "Toshkent va viloyatlarga tezkor kuryer", color: "text-blue-600 bg-blue-50/90" },
@@ -985,7 +1250,6 @@ export default function MaktabStartApp() {
                   </p>
                 </div>
 
-                {/* Grade Selector Pills */}
                 <div className="flex items-center justify-start md:justify-center gap-2 overflow-x-auto pb-4 pt-2">
                   {[1, 2, 3, 4, 5, 6, 7].map((grade) => {
                     const isActive = selectedGrade === grade;
@@ -1006,7 +1270,6 @@ export default function MaktabStartApp() {
                   })}
                 </div>
 
-                {/* Recommended Package Card */}
                 <div className={`mt-8 rounded-3xl p-6 sm:p-8 lg:p-10 bg-gradient-to-br ${GRADE_PACKAGES[selectedGrade].bg} border shadow-xl relative overflow-hidden animate-fade-in`}>
                   <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-center">
                     <div className="lg:col-span-7 space-y-6">
@@ -1023,7 +1286,6 @@ export default function MaktabStartApp() {
                         </p>
                       </div>
 
-                      {/* Items Checklist */}
                       <div className="space-y-3 bg-white/90 backdrop-blur-md p-5 rounded-2xl border border-slate-200 shadow-sm">
                         <h4 className="text-xs font-extrabold uppercase tracking-wider text-slate-500">
                           To'plam tarkibi:
@@ -1041,7 +1303,6 @@ export default function MaktabStartApp() {
                       </div>
                     </div>
 
-                    {/* Right Price & CTA */}
                     <div className="lg:col-span-5 bg-white rounded-2xl p-6 sm:p-8 shadow-lg border border-slate-100 flex flex-col justify-between h-full">
                       <div>
                         <span className="text-xs font-bold text-slate-400 uppercase tracking-wider">
@@ -1097,8 +1358,8 @@ export default function MaktabStartApp() {
                       Barcha turdagi maktab qurollari va aksessuarlar katalogi
                     </p>
                   </div>
-                  <button onClick={() => setActiveTab("catalog")} className="text-sm font-bold text-blue-600 hover:text-blue-700 flex items-center gap-1 cursor-pointer">
-                    Barchasini ko'rish <ArrowRight className="w-4 h-4" />
+                  <button onClick={() => setActiveTab("megacatalog")} className="text-sm font-bold text-blue-600 hover:text-blue-700 flex items-center gap-1 cursor-pointer">
+                    Barcha 180+ turlarni ko'rish <ArrowRight className="w-4 h-4" />
                   </button>
                 </div>
 
@@ -1114,8 +1375,7 @@ export default function MaktabStartApp() {
                     <div
                       key={idx}
                       onClick={() => {
-                        setSelectedCategory(cat.name);
-                        setActiveTab("catalog");
+                        setActiveTab("megacatalog");
                       }}
                       className="bg-white rounded-2xl p-5 border border-slate-200/80 shadow-sm hover:shadow-md transition-all cursor-pointer flex flex-col items-center text-center group"
                     >
@@ -1135,12 +1395,103 @@ export default function MaktabStartApp() {
         )}
 
         {/* ========================================================================= */}
-        {/* TAB 2: CATALOG & FILTERS (WITH ROW-BY-ROW AND REAL PHOTOS) */}
+        {/* TAB 2: 180+ MEGA-KATALOG (EXACTLY AS IN USER SCREENSHOT + BONUS CATEGORIES) */}
+        {/* ========================================================================= */}
+        {activeTab === "megacatalog" && (
+          <div className="bg-slate-950 text-slate-100 min-h-screen py-12 px-4 sm:px-6 lg:px-8 animate-fade-in">
+            <div className="max-w-7xl mx-auto space-y-10">
+              
+              {/* Top Banner Header matching the screenshot aesthetic */}
+              <div className="text-center max-w-4xl mx-auto space-y-3">
+                <span className="bg-blue-500/20 text-blue-400 border border-blue-500/30 px-4 py-1.5 rounded-full text-xs font-bold uppercase tracking-widest inline-block">
+                  📦 Rekonfiguratsiya qildi — grid ustunlarini uchta qatorga
+                </span>
+                <h1 className="text-3xl sm:text-5xl font-extrabold tracking-tight text-white">
+                  To'liq mahsulotlar katalogi
+                </h1>
+                <p className="text-base sm:text-lg font-bold text-slate-400">
+                  12 kategoriya, 180 dan ortiq mahsulot turi (Istalgan tugmani bosing — savatga tushadi!)
+                </p>
+
+                {/* Instant Search Bar Inside Mega Catalog */}
+                <div className="pt-4 max-w-xl mx-auto relative">
+                  <div className="relative flex items-center">
+                    <Search className="w-5 h-5 text-blue-400 absolute left-4" />
+                    <input
+                      type="text"
+                      value={megaSearchQuery}
+                      onChange={(e) => setMegaSearchQuery(e.target.value)}
+                      placeholder="180+ tur ichidan qidirish (masalan: sirkul, flomaster, kostyum)..."
+                      className="w-full bg-slate-900 border border-slate-800 focus:border-blue-500 rounded-2xl pl-12 pr-10 py-3.5 text-sm text-white placeholder-slate-500 outline-none font-medium shadow-2xl transition-all"
+                    />
+                    {megaSearchQuery && (
+                      <button onClick={() => setMegaSearchQuery("")} className="absolute right-4 text-slate-400 hover:text-white">
+                        <X className="w-5 h-5" />
+                      </button>
+                    )}
+                  </div>
+                </div>
+              </div>
+
+              {/* 3-Column Sleek Dark Grid of 12 Categories */}
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                {MEGA_CATALOG_DATA.map((cat) => {
+                  const filteredCatItems = cat.items.filter((item) =>
+                    megaSearchQuery.trim() === "" ||
+                    item.name.toLowerCase().includes(megaSearchQuery.toLowerCase()) ||
+                    cat.title.toLowerCase().includes(megaSearchQuery.toLowerCase())
+                  );
+
+                  if (megaSearchQuery.trim() !== "" && filteredCatItems.length === 0) {
+                    return null;
+                  }
+
+                  return (
+                    <div
+                      key={cat.id}
+                      className="bg-slate-900/90 border border-slate-800/80 rounded-2xl overflow-hidden shadow-2xl flex flex-col justify-between transition-all hover:border-slate-700"
+                    >
+                      {/* Colored Top Header Bar exactly as in screenshot */}
+                      <div className={`${cat.headerBg} py-3.5 px-5 font-extrabold text-sm sm:text-base tracking-wide flex items-center justify-between shadow-md`}>
+                        <span>{cat.title}</span>
+                        <span className="bg-black/25 px-2.5 py-0.5 rounded-full text-xs font-bold">
+                          {filteredCatItems.length} ta
+                        </span>
+                      </div>
+
+                      {/* Pill / Chip Buttons Body */}
+                      <div className="p-4 sm:p-5 flex flex-wrap gap-2 flex-1 items-start">
+                        {filteredCatItems.map((item, idx) => (
+                          <button
+                            key={idx}
+                            onClick={() => addMegaItemToCart(item.name, item.price, cat.title)}
+                            className="bg-slate-800 hover:bg-slate-700 active:bg-blue-600 text-slate-200 hover:text-white border border-slate-700/80 px-3 py-1.5 rounded-xl text-xs font-bold transition-all flex items-center gap-1.5 shadow-sm hover:scale-105 cursor-pointer group"
+                            title={`${item.price.toLocaleString()} so'm — Savatga qo'shish`}
+                          >
+                            <span>{item.name}</span>
+                            <Plus className="w-3.5 h-3.5 text-slate-400 group-hover:text-white" />
+                          </button>
+                        ))}
+                      </div>
+
+                      {/* Bottom quick action footer */}
+                      <div className="px-5 py-3 border-t border-slate-800/80 bg-slate-900/50 flex items-center justify-between text-xs text-slate-400 font-semibold">
+                        <span>💡 Bosing va savatingizga soling</span>
+                        <span className="text-blue-400 font-bold">O'zbekiston standartlari</span>
+                      </div>
+                    </div>
+                  );
+                })}
+              </div>
+            </div>
+          </div>
+        )}
+
+        {/* ========================================================================= */}
+        {/* TAB 3: CATALOG & FILTERS */}
         {/* ========================================================================= */}
         {activeTab === "catalog" && (
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10 animate-fade-in">
-            
-            {/* Search Notice if filtering */}
             {searchQuery && (
               <div className="bg-blue-600 text-white p-4 rounded-2xl mb-6 shadow-md flex items-center justify-between">
                 <div className="flex items-center gap-3">
@@ -1156,14 +1507,12 @@ export default function MaktabStartApp() {
             )}
 
             <div className="flex flex-col md:flex-row gap-8">
-              {/* Left Sidebar Filters */}
               <div className="w-full md:w-64 space-y-6 shrink-0 bg-white/95 backdrop-blur-md p-6 rounded-3xl border border-slate-200/80 shadow-sm h-fit">
                 <div className="flex items-center justify-between border-b pb-4">
                   <span className="font-extrabold text-base text-slate-900 flex items-center gap-2"><Filter className="w-4 h-4 text-blue-600" /> Filtrlar</span>
                   <button onClick={() => { setSelectedCategory("Barchasi"); setSelectedGradeFilter(null); setSearchQuery(""); }} className="text-xs font-bold text-rose-500 hover:underline cursor-pointer">Tozalash</button>
                 </div>
 
-                {/* Categories */}
                 <div>
                   <h4 className="text-xs font-extrabold uppercase tracking-wider text-slate-500 mb-3">Kategoriyalar</h4>
                   <div className="space-y-1.5">
@@ -1179,7 +1528,6 @@ export default function MaktabStartApp() {
                   </div>
                 </div>
 
-                {/* Grade filter */}
                 <div>
                   <h4 className="text-xs font-extrabold uppercase tracking-wider text-slate-500 mb-3">Sinf bo'yicha</h4>
                   <div className="grid grid-cols-4 gap-1.5">
@@ -1196,13 +1544,11 @@ export default function MaktabStartApp() {
                 </div>
               </div>
 
-              {/* Right Product Grid / Row-by-Row List */}
               <div className="flex-1 space-y-6">
                 <div className="bg-white/95 backdrop-blur-md p-4 rounded-2xl border border-slate-200/80 flex flex-col sm:flex-row justify-between items-center gap-4 shadow-sm">
                   <span className="font-bold text-sm text-slate-700">Ko'rsatilmoqda: <strong className="text-blue-600">{filteredProducts.length}</strong> ta mahsulot</span>
                   
                   <div className="flex items-center gap-4">
-                    {/* View Mode Toggle: Row-by-Row vs Grid */}
                     <div className="flex items-center bg-slate-100 p-1 rounded-xl border border-slate-200">
                       <button
                         onClick={() => setViewMode("list")}
@@ -1249,7 +1595,6 @@ export default function MaktabStartApp() {
                     </button>
                   </div>
                 ) : viewMode === "list" ? (
-                  /* ROW-BY-ROW LIST VIEW WITH REAL HIGH-RES PHOTOS */
                   <div className="space-y-4">
                     {filteredProducts.map((prod) => (
                       <div
@@ -1298,7 +1643,6 @@ export default function MaktabStartApp() {
                     ))}
                   </div>
                 ) : (
-                  /* GRID VIEW WITH REAL HIGH-RES PHOTOS */
                   <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
                     {filteredProducts.map((prod) => (
                       <div key={prod.id} className="group bg-white/95 backdrop-blur-md rounded-2xl p-4 border border-slate-200/80 shadow-soft hover:shadow-hover transition-all duration-300 flex flex-col justify-between relative">
@@ -1341,7 +1685,7 @@ export default function MaktabStartApp() {
         )}
 
         {/* ========================================================================= */}
-        {/* TAB 3: SCHOOL CHECKLIST */}
+        {/* TAB 4: SCHOOL CHECKLIST */}
         {/* ========================================================================= */}
         {activeTab === "checklist" && (
           <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-12 animate-fade-in">
@@ -1361,7 +1705,6 @@ export default function MaktabStartApp() {
               </div>
             </div>
 
-            {/* Checklist Items */}
             <div className="bg-white/95 backdrop-blur-md rounded-3xl p-6 sm:p-8 border border-slate-200 shadow-sm space-y-4">
               <h3 className="font-extrabold text-lg text-slate-900 border-b pb-4">Maktab buyumlari ro'yxati (Bosing va belgilang):</h3>
               <div className="space-y-3">
@@ -1404,7 +1747,7 @@ export default function MaktabStartApp() {
         )}
 
         {/* ========================================================================= */}
-        {/* TAB 4: BUDGET CALCULATOR */}
+        {/* TAB 5: BUDGET CALCULATOR */}
         {/* ========================================================================= */}
         {activeTab === "calculator" && (
           <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-12 animate-fade-in">
@@ -1417,7 +1760,6 @@ export default function MaktabStartApp() {
                 <p className="text-slate-600 text-sm mt-2 font-medium">Rejalashtirgan byudjetingizni kiritish orqali eng optimal maktab to'plamini avtomatik hisoblab oling!</p>
               </div>
 
-              {/* Slider Input */}
               <div className="bg-slate-50 p-6 rounded-2xl border border-slate-200/80 space-y-4">
                 <div className="flex justify-between items-center">
                   <label className="font-extrabold text-base text-slate-800">Sizning byudjetingiz:</label>
@@ -1439,7 +1781,6 @@ export default function MaktabStartApp() {
                 </div>
               </div>
 
-              {/* Recommendation result based on budget */}
               <div className="border border-blue-200 bg-blue-50/50 rounded-2xl p-6 flex flex-col sm:flex-row items-center justify-between gap-6">
                 <div className="space-y-2">
                   <span className="bg-blue-600 text-white text-xs font-bold px-3 py-1 rounded-full uppercase tracking-wider">Tavsiya etilgan to'plam</span>
@@ -1464,7 +1805,7 @@ export default function MaktabStartApp() {
         )}
 
         {/* ========================================================================= */}
-        {/* TAB 5: USER ACCOUNT / KABINET (WITH MIRJALOL's GITHUB PHOTO!) */}
+        {/* TAB 6: USER ACCOUNT / KABINET */}
         {/* ========================================================================= */}
         {activeTab === "account" && (
           <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-12 animate-fade-in">
@@ -1489,7 +1830,6 @@ export default function MaktabStartApp() {
                 </button>
               </div>
 
-              {/* Account Orders & Wishlist status */}
               <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
                 <div className="p-5 rounded-2xl bg-slate-50 border border-slate-200/80 text-center space-y-1">
                   <ShoppingBag className="w-6 h-6 text-blue-600 mx-auto mb-2" />
@@ -1508,7 +1848,6 @@ export default function MaktabStartApp() {
                 </div>
               </div>
 
-              {/* Order History */}
               <div>
                 <h3 className="font-extrabold text-lg text-slate-900 mb-4">So'nggi buyurtmalar tarixi:</h3>
                 <div className="p-4 rounded-2xl border border-slate-200 bg-slate-50 flex items-center justify-between text-sm">
@@ -1547,10 +1886,10 @@ export default function MaktabStartApp() {
           <div>
             <h4 className="text-white font-extrabold text-sm mb-4 uppercase tracking-wider">Kategoriyalar</h4>
             <ul className="space-y-2 text-sm font-medium">
+              <li><button onClick={() => { setActiveTab("megacatalog"); }} className="hover:text-white transition-colors cursor-pointer">📦 180+ Mega-Katalog</button></li>
               <li><button onClick={() => { setSelectedCategory("Maktab Sumkalari"); setActiveTab("catalog"); }} className="hover:text-white transition-colors cursor-pointer">Maktab Ryukzaklari</button></li>
               <li><button onClick={() => { setSelectedCategory("Daftarlar"); setActiveTab("catalog"); }} className="hover:text-white transition-colors cursor-pointer">Daftarlar va Albomlar</button></li>
               <li><button onClick={() => { setSelectedCategory("Qalamlar"); setActiveTab("catalog"); }} className="hover:text-white transition-colors cursor-pointer">Qalamlar va Ruchkalar</button></li>
-              <li><button onClick={() => { setSelectedCategory("Geometriya"); setActiveTab("catalog"); }} className="hover:text-white transition-colors cursor-pointer">Geometriya qurollari</button></li>
             </ul>
           </div>
 
