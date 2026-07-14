@@ -370,7 +370,7 @@ export default function MaktabStartApp() {
     name: "Mirjalol Muhammadkarimov",
     phone: "+998 90 123 45 67",
     role: "Ota-ona",
-    avatar: "https://github.com/muhammadkarimovmirjalol-ctrl.png",
+    avatar: "https://images.unsplash.com/photo-1539571696357-5a69c17a67c6?w=400&auto=format&fit=crop&q=80",
     isLoggedIn: true,
   });
   const [isLoginModalOpen, setIsLoginModalOpen] = useState(false);
@@ -515,7 +515,7 @@ export default function MaktabStartApp() {
       name: finalLogin ? `Mirjalol (${finalLogin})` : "Mirjalol Muhammadkarimov",
       phone: loginPhone,
       role: loginRole,
-      avatar: "https://github.com/muhammadkarimovmirjalol-ctrl.png",
+      avatar: "https://images.unsplash.com/photo-1539571696357-5a69c17a67c6?w=400&auto=format&fit=crop&q=80",
       isLoggedIn: true,
     });
     setIsLoginModalOpen(false);
@@ -1191,13 +1191,16 @@ export default function MaktabStartApp() {
 
             {user.isLoggedIn ? (
               <button
-                onClick={() => setActiveTab("account")}
-                className={`px-2.5 py-1.5 rounded-2xl border flex items-center gap-2 text-xs font-bold transition-all cursor-pointer shadow-sm ${
-                  activeTab === "account" ? "bg-blue-600 text-white border-blue-600 shadow-md" : "bg-white border-slate-200 text-slate-800 hover:bg-slate-50"
+                onClick={() => {
+                  setActiveTab("account");
+                  window.scrollTo({ top: 0, behavior: "smooth" });
+                }}
+                className={`px-3 py-1.5 rounded-full border flex items-center gap-2 text-xs font-bold transition-all cursor-pointer shadow-sm ${
+                  activeTab === "account" ? "bg-indigo-600 text-white border-indigo-600 shadow-md ring-2 ring-indigo-500/30" : "bg-white border-slate-200 text-slate-800 hover:bg-slate-50"
                 }`}
               >
-                <img src={user.avatar} alt="User Avatar" className="w-6 h-6 rounded-full object-cover border border-slate-200 shadow-inner" />
-                <span className="max-w-[100px] truncate font-extrabold">{user.name.split(" ")[0]}</span>
+                <img src={user.avatar} alt="User Avatar" className="w-6 h-6 rounded-full object-cover ring-1 ring-slate-300 shadow-sm shrink-0" />
+                <span className="max-w-[110px] truncate font-extrabold">{user.name.split(" ")[0]}</span>
               </button>
             ) : (
               <button
@@ -1291,17 +1294,23 @@ export default function MaktabStartApp() {
                     </p>
                   </div>
 
-                  <div className="bg-white/10 backdrop-blur-md border border-white/20 p-5 rounded-2xl text-center shrink-0 w-full md:w-64 space-y-3 shadow-lg">
-                    <div className="w-20 h-20 rounded-2xl overflow-hidden mx-auto shadow-md border-2 border-white/40">
+                  <div className="bg-white/10 backdrop-blur-xl border border-white/20 p-6 rounded-3xl text-center shrink-0 w-full md:w-72 space-y-4 shadow-2xl">
+                    <div className="relative w-22 h-22 rounded-full overflow-hidden mx-auto shadow-xl ring-4 ring-white/30 bg-gradient-to-br from-indigo-500 to-blue-600 flex items-center justify-center">
                       <img src={user.avatar} alt="Mirjalol Photo" className="w-full h-full object-cover" />
                     </div>
-                    <div>
-                      <h4 className="font-bold text-white text-sm">{user.name}</h4>
-                      <span className="text-xs text-emerald-400 block font-bold">● Akkaunt tasdiqlangan</span>
+                    <div className="space-y-1.5">
+                      <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-emerald-400/20 border border-emerald-400/30 text-emerald-300 font-bold text-[11px]">
+                        <ShieldCheck className="w-3.5 h-3.5 text-emerald-400" />
+                        <span>{user.role} • tasdiqlangan</span>
+                      </span>
+                      <h4 className="font-extrabold text-white text-base tracking-tight">{user.name}</h4>
                     </div>
                     <button
-                      onClick={() => setActiveTab("account")}
-                      className="w-full py-2.5 rounded-xl bg-white text-slate-900 font-extrabold text-xs hover:bg-blue-50 transition-colors shadow flex items-center justify-center gap-1.5"
+                      onClick={() => {
+                        setActiveTab("account");
+                        window.scrollTo({ top: 0, behavior: "smooth" });
+                      }}
+                      className="w-full py-3 rounded-xl bg-white text-slate-900 font-extrabold text-xs hover:bg-blue-50 transition-all shadow-md hover:shadow-lg flex items-center justify-center gap-1.5 cursor-pointer"
                     >
                       <span>Kabinetga o'tish</span>
                       <ArrowRight className="w-3.5 h-3.5" />
